@@ -10,7 +10,7 @@ public interface BoardService<T> {
 
     T get(Long id);
 
-    long write(T t) throws Exception;
+    long write(T t);
 
     boolean update(Long id, T t);
 

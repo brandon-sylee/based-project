@@ -44,7 +44,7 @@ public abstract class AbstractBoardService<T extends BoardAttributes> implements
         return boardConverter.convertReadModel(getTClass(), repository.getOne(id));
     }
 
-    public long write(T t) throws Exception {
+    public long write(T t) {
         MBoardEntity mBoardEntity = repository.save(boardConverter.convertWriteModel(BoardTyped.NOTICE, t));
         contentRepository.save(boardConverter.convertWriteModel(mBoardEntity, t));
         return mBoardEntity.getMid();
