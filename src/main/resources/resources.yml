@@ -1,0 +1,14 @@
+brandon:
+  resources:
+    compressed: false
+    using: false
+    js:
+#      - /js/jquery-3.0.0.min.js
+      - /js/jquery-1.11.3.min.js
+      - /js/jquery.storageapi.min.js
+      - /js/bootstrap.min.js
+      - /js/holder.min.js
+    css:
+      - /css/bootstrap.min.css
+      - /css/bootstrap-theme.min.css
+      - /css/ie10-viewport-bug-workaround.css

@@ -1,0 +1,11 @@
+body {
+    margin: 0;
+    padding: 0;
+    -webkit-text-size-adjust: none;
+    word-wrap: break-word;
+    color: #333;
+}
+
+.test {
+    background-color: /*[[${themeBackgroundColor}]]*/aqua;
+}
