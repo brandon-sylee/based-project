@@ -5,10 +5,22 @@
     <title>Title</title>
 </head>
 <body>
-쓰기
+
 <form method="post" th:action="@{/board/write}" th:object="${normalBoardModel}">
-    <input th:type="text" th:name="subject" th:field="*{subject}"/><p th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></p>
-    <textarea th:name="content" th:field="*{content}"/><p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
+    <table>
+        <thead>
+            <tr>
+                <th>제목</th>
+                <th>내용</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input th:type="text" th:name="subject" th:field="*{subject}"/><p th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></p></td>
+                <td><textarea th:name="content" th:field="*{content}"/><p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p></td>
+            </tr>
+        </tbody>
+    </table>
     <button>Form 쓰기</button>
 </form>
 

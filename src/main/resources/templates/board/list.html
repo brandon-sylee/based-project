@@ -14,5 +14,21 @@
         </ul>
     </fieldset>
 </section>
+<section>
+    <fieldset>
+        <legend>목록</legend>
+        <ul>
+            <li>제목</li>
+            <li>날짜</li>
+        </ul>
+        <ul th:each="article : ${boards}">
+            <li th:text="${article.subject}">여기는 제목</li>
+            <li th:text="${article.localizedDateTimeLong}">여기는 날짜</li>
+            <li th:text="${article.localizedDateTime}">여기는 날짜</li>
+            <li th:text="${article.localizedDateTimeShort}">여기는 날짜</li>
+            <li th:text="${#calendars.format(article.createdOnUTCBased, 'yyyy-MM-dd hh:mm:ss')}">여기는 UTC 날짜</li>
+        </ul>
+    </fieldset>
+</section>
 </body>
 </html>
