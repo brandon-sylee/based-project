@@ -17,13 +17,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.http.CacheControl;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.thymeleaf.TemplateEngine;
@@ -37,6 +35,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.nio.charset.Charset;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -48,13 +47,19 @@ import static org.slf4j.LoggerFactory.getLogger;
 @ComponentScan(basePackageClasses = BasedProjectApplication.class)
 public class ViewResolverConfiguration extends WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter implements ApplicationContextAware {
     static final Charset CHARACTER_ENCODING = Charset.forName("UTF-8");
+    final Integer ONE_YEAR = 31556926;
     final Logger logger = getLogger(getClass());
     private ApplicationContext applicationContext;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        if ( !registry.hasMappingForPattern("/webjars/**") )
-            registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        boolean isReal = bUtil.isRealMode();
+        registry.setOrder(Integer.MIN_VALUE);
+        registry.addResourceHandler("/font/**").addResourceLocations("classpath:/static/font/").setCachePeriod(isReal ? ONE_YEAR : 0);
+        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/").setCachePeriod(isReal ? ONE_YEAR : 0);
+        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/").setCachePeriod(isReal ? ONE_YEAR : 0);
+        registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/").setCachePeriod(isReal ? ONE_YEAR : 0);
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/").setCachePeriod(isReal ? ONE_YEAR : 0);
     }
 
     @Autowired
@@ -126,9 +131,6 @@ public class ViewResolverConfiguration extends WebMvcAutoConfiguration.WebMvcAut
     }
 
     private ViewResolver makeViewResolver(TEMPLATE_TYPED template_typed, SpringMessageResolver springMessageResolver) {
-        if (!bUtil.isRealMode()) {
-            logger.info("##### {} Cache Mode : {} >> {}", template_typed.name(), bUtil.isRealMode(), template_typed.toString());
-        }
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setApplicationContext(applicationContext);
         resolver.setTemplateEngine(templateEngine(templateResolver(template_typed), springMessageResolver));
