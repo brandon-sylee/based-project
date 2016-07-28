@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.thymeleaf.TemplateEngine;
@@ -37,6 +38,8 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 import java.nio.charset.Charset;
 import java.util.TimeZone;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  * Created by BrandonLee on 2016-07-20.
  */
@@ -45,12 +48,13 @@ import java.util.TimeZone;
 @ComponentScan(basePackageClasses = BasedProjectApplication.class)
 public class ViewResolverConfiguration extends WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter implements ApplicationContextAware {
     static final Charset CHARACTER_ENCODING = Charset.forName("UTF-8");
-    final Logger logger = LoggerFactory.getLogger(ViewResolverConfiguration.class);
+    final Logger logger = getLogger(getClass());
     private ApplicationContext applicationContext;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        if ( !registry.hasMappingForPattern("/webjars/**") )
+            registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
     @Autowired
