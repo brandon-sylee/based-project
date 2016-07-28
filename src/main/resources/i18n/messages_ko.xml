@@ -2,4 +2,5 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <entry key="title">안녕!!</entry>
+    <entry key="validation.min">최소 1자리이상 입력해라</entry>
 </properties>

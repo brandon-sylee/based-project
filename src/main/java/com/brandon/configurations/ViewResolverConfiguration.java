@@ -15,7 +15,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -99,6 +101,17 @@ public class ViewResolverConfiguration extends WebMvcAutoConfiguration.WebMvcAut
         return messageResolver;
     }
 
+    @Bean
+    public LocalValidatorFactoryBean localValidatorFactoryBean(MessageSource messageSource) {
+        LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
+        localValidatorFactoryBean.setValidationMessageSource(messageSource);
+        return localValidatorFactoryBean;
+    }
+
+    @Bean
+    public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource) {
+        return new MessageSourceAccessor(messageSource);
+    }
 
     private ViewResolver makeViewResolver(TEMPLATE_TYPED template_typed, SpringMessageResolver springMessageResolver) {
         if (!bUtil.isRealMode()) {
