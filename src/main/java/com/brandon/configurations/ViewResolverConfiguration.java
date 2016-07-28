@@ -3,6 +3,7 @@ package com.brandon.configurations;
 import com.brandon.BasedProjectApplication;
 import com.brandon.utils.BUtil;
 import com.google.common.base.MoreObjects;
+import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -15,8 +16,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -84,7 +85,7 @@ public class ViewResolverConfiguration extends WebMvcAutoConfiguration.WebMvcAut
         registry.addInterceptor(new LocaleChangeInterceptor());
     }
 
-    @Bean(name = "messageSource")
+    @Bean
     public ReloadableResourceBundleMessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setCacheSeconds(bUtil.isRealMode() ? -1 : 3600);
@@ -102,15 +103,16 @@ public class ViewResolverConfiguration extends WebMvcAutoConfiguration.WebMvcAut
     }
 
     @Bean
-    public LocalValidatorFactoryBean localValidatorFactoryBean(MessageSource messageSource) {
+    public LocalValidatorFactoryBean localValidatorFactoryBean() {
         LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
-        localValidatorFactoryBean.setValidationMessageSource(messageSource);
+        localValidatorFactoryBean.setApplicationContext(applicationContext);
+        localValidatorFactoryBean.setValidationMessageSource(messageSource());
         return localValidatorFactoryBean;
     }
 
-    @Bean
-    public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource) {
-        return new MessageSourceAccessor(messageSource);
+    @Override
+    public Validator getValidator() {
+        return localValidatorFactoryBean();
     }
 
     private ViewResolver makeViewResolver(TEMPLATE_TYPED template_typed, SpringMessageResolver springMessageResolver) {

@@ -8,7 +8,10 @@
 쓰기
 <form method="post" th:action="@{/board/write}" th:object="${normalBoardModel}">
     <input th:type="text" th:name="subject" th:field="*{subject}"/><p th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></p>
-    <button>쓰기</button>
+    <textarea th:name="content" th:field="*{content}"/><p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
+    <button>Form 쓰기</button>
 </form>
+
+<button type="button">Ajax Restful 쓰기</button>
 </body>
 </html>

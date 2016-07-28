@@ -10,18 +10,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Locale;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  * Created by Naver on 2016-07-20.
  */
 @Controller
 public class IndexController {
-    final Logger logger = LoggerFactory.getLogger(IndexController.class);
+    final Logger logger = getLogger(getClass());
+
     @Autowired
     MessageSource messageSource;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String index(Locale locale) {
-        logger.info("{}", messageSource.getMessage("title", null, locale));
+    public String index() {
         return "index";
     }
 }
