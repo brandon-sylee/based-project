@@ -1,12 +1,13 @@
 package com.brandon.services.boards;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Created by brandon Lee(lz90011@linecorp.com) on 2016-07-05.
  */
 public interface BoardService<T> {
-    List<T> lists();
+    Page<T> lists(Pageable pageable);
 
     T get(Long id);
 

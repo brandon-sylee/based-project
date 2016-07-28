@@ -22,6 +22,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.thymeleaf.TemplateEngine;
@@ -46,6 +47,11 @@ public class ViewResolverConfiguration extends WebMvcAutoConfiguration.WebMvcAut
     static final Charset CHARACTER_ENCODING = Charset.forName("UTF-8");
     final Logger logger = LoggerFactory.getLogger(ViewResolverConfiguration.class);
     private ApplicationContext applicationContext;
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
 
     @Autowired
     private BUtil bUtil;
@@ -195,7 +201,7 @@ public class ViewResolverConfiguration extends WebMvcAutoConfiguration.WebMvcAut
 
             @Override
             String[] getViewNames() {
-                return array("*.css");
+                return array("common.css");
             }
 
             @Override
@@ -221,7 +227,7 @@ public class ViewResolverConfiguration extends WebMvcAutoConfiguration.WebMvcAut
 
             @Override
             String[] getViewNames() {
-                return array("*.js");
+                return array("common.js");
             }
 
             @Override

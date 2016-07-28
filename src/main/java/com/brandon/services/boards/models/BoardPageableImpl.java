@@ -20,7 +20,15 @@ public class BoardPageableImpl<T> extends PageImpl implements Serializable, Boar
     private String searchKeyword;
     private List<T> contents;
 
-    public BoardPageableImpl(List<T> contents, long total, String searchKeyword, int pageSize, int pageNumber, int pagePerGroupSize) {
+    public BoardPageableImpl(List<T> contents, long total) {
+        super(contents);
+        this.total = total;
+        this.pageNumber = 1;
+        this.pageSize = 25;
+        this.pagePerGroupSize = 10;
+    }
+
+    public BoardPageableImpl(List<T> contents, long total, int pageSize, int pageNumber, int pagePerGroupSize, String searchKeyword) {
         super(contents);
         this.contents = contents;
         this.total = total;

@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>List</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/common.css}"/>
 </head>
 <body>
 여기는 목록
@@ -21,7 +23,7 @@
             <li>제목</li>
             <li>날짜</li>
         </ul>
-        <ul th:each="article : ${boards}">
+        <ul th:each="article : ${articles.content}">
             <li th:text="${article.subject}">여기는 제목</li>
             <li th:text="${article.localizedDateTimeLong}">여기는 날짜</li>
             <li th:text="${article.localizedDateTime}">여기는 날짜</li>
@@ -30,5 +32,28 @@
         </ul>
     </fieldset>
 </section>
+<section>
+    <fieldset th:if="${articles.totalPages>0}">
+        <legend>페이징</legend>
+        <ul>
+            <li>
+                <a th:if='${not articles.first}' th:href='@{?(page=0,size=${articles.size})}'>&larr;</a>
+                <a th:if='${articles.first}' href="javascript:void(0);">&larr;</a>
+            </li>
+            <li th:each="pageNo : ${#numbers.sequence(0, articles.totalPages-1)}">
+                <a th:href="@{?(page=${pageNo},size=${articles.size})}" th:text="${pageNo+1}"></a>
+            </li>
+            <li>
+                <a th:if='${not articles.last}' th:href='@{?(page=${articles.number+1},size=${articles.size})}'>&rarr;</a>
+                <a th:if='${articles.last}' href="javascript:void(0);">&rarr;</a>
+            </li>
+        </ul>
+    </fieldset>
+    <fieldset>
+        <legend>검색</legend>
+        <input type="text" name="search"/>
+    </fieldset>
+</section>
+<script th:src="@{/common.js}"></script>
 </body>
 </html>

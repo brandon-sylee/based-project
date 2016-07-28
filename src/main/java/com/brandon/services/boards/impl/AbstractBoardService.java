@@ -9,9 +9,12 @@ import com.brandon.services.boards.converter.BoardConverter;
 import com.brandon.services.boards.models.BoardAttributes;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -35,8 +38,13 @@ public abstract class AbstractBoardService<T extends BoardAttributes> implements
     protected abstract Class<T> getTClass();
 
     @Transactional(readOnly = true)
-    public List<T> lists() {
-        return repository.findAll().stream().map(mBoardEntity -> boardConverter.convertListModel(getTClass(), mBoardEntity)).collect(Collectors.toList());
+    public Page<T> lists(Pageable pageable) {
+        return repository.findAll(pageable).map(new Converter<MBoardEntity, T>() {
+            @Override
+            public T convert(MBoardEntity source) {
+                return boardConverter.convertListModel(getTClass(), source);
+            }
+        });
     }
 
     @Transactional(readOnly = true)
