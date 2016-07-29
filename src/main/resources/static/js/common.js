@@ -136,8 +136,7 @@ front.modules.register(function() {
     /* 테스트 모듈 1*/
     return {
         "$$START_UP$$" : function() {
-            if (/*[[${isRealMode}]]*/false)
-                front.modules.disableLogger();
+            if (/*[[${isRealMode}]]*/false) front.modules.disableLogger();
             console.log("테스트 모듈 1 등록 후 StartUp 호출됨");
         }
     }
@@ -147,7 +146,6 @@ front.modules.register(function() {
     /* 테스트 모듈 2 */
     return {
         "$$START_UP$$" : function() {
-            front.modules.enableLogger();
             console.log("테스트 모듈 2 등록 후 StartUp 호출됨");
         }
     }
