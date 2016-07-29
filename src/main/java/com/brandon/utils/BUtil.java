@@ -1,5 +1,6 @@
 package com.brandon.utils;
 
+import com.brandon.BasedProjectProfiles;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.core.util.MinimalPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +27,7 @@ public class BUtil {
     }
 
     public boolean isRealMode() {
-        return Arrays.stream(environment.getActiveProfiles()).anyMatch(x -> x.equals("beta") || x.equals("rc") || x.equals("real"));
+        return Arrays.stream(environment.getActiveProfiles()).anyMatch(x -> x.equals(BasedProjectProfiles.staging.name()) || x.equals(BasedProjectProfiles.production.name()));
     }
 
     public ObjectMapper objectMapper() {

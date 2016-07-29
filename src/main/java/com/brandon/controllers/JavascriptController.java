@@ -21,7 +21,7 @@ public class JavascriptController {
     @RequestMapping(value = "common.js", method = RequestMethod.GET)
     public String commonJavascript(Model model) {
         model.addAttribute("staticVersion", 1.1);
-        model.addAttribute("isRealMode", !bUtil.isRealMode());
+        model.addAttribute("isRealMode", bUtil.isRealMode());
         return "common.js";
     }
 }
