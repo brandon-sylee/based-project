@@ -23,6 +23,14 @@ apply plugin: 'propdeps-eclipse'
 jar {
 	baseName = 'based-project'
 	version = '0.0.1-SNAPSHOT'
+	manifest {
+		attributes 'Title' : 'based-project', 'Version':version, 'Main-Class' : 'com.brandon.BasedProjectApplication'
+	}
+	archiveName 'based.jar'
+	dependsOn configurations.runtime
+	from {
+        	configurations.compile.collect {it.isDirectory()? it: zipTree(it)}
+    	}
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
