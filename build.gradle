@@ -28,6 +28,8 @@ jar {
         switch (project.getProperties().get("profile")) {
             case 'production':
             case 'staging':
+                delete(file("/home/ec2-user/based/*"))
+                archiveName = "based-"+project.getProperties().get("profile")+".jar"
                 destinationDir = file("/home/ec2-user/based/")
                 break;
             default:
