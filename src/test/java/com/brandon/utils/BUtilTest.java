@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfigurati
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.List;
@@ -23,11 +24,8 @@ import java.util.Map;
 /**
  * Created by Naver on 2016-07-22.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = BasedProjectApplication.class)
-@WebAppConfiguration
-@EnableAutoConfiguration(exclude = ThymeleafAutoConfiguration.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = BasedProjectApplication.class)
 public class BUtilTest {
     final Logger logger = LoggerFactory.getLogger(BUtilTest.class);
     @Autowired
@@ -43,6 +41,7 @@ public class BUtilTest {
             test.add(t);
         }
         logger.debug(bUtil.objectMapper().writeValueAsString(test));
+        logger.debug("{}", bUtil.prettyPrinter(test));
     }
 
 }

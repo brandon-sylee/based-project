@@ -6,22 +6,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.PollableChannel;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import static org.junit.Assert.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Created by Naver on 2016-07-29.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = BasedProjectApplication.class)
-@WebAppConfiguration
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = BasedProjectApplication.class)
+@EnableTransactionManagement
 public class IntegrationFeedConfigurationTest {
     final Logger logger = getLogger(getClass());
 
