@@ -1,14 +1,12 @@
 package com.brandon.configurations;
 
 import com.brandon.BasedProjectApplication;
+import com.brandon.Constant;
 import com.brandon.utils.BUtil;
 import com.google.common.base.MoreObjects;
-import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
@@ -17,11 +15,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.http.CacheControl;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.thymeleaf.TemplateEngine;
@@ -33,9 +33,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
-import java.nio.charset.Charset;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -45,25 +43,22 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackageClasses = BasedProjectApplication.class)
-public class ViewResolverConfiguration extends WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter implements ApplicationContextAware {
-    static final Charset CHARACTER_ENCODING = Charset.forName("UTF-8");
-    final Integer ONE_YEAR = 31556926;
+public class ViewResolverConfiguration extends WebMvcConfigurationSupport implements ApplicationContextAware {
     final Logger logger = getLogger(getClass());
     private ApplicationContext applicationContext;
+    @Autowired
+    private BUtil bUtil;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         boolean isReal = bUtil.isRealMode();
         registry.setOrder(Integer.MIN_VALUE);
-        registry.addResourceHandler("/font/**").addResourceLocations("classpath:/static/font/").setCachePeriod(isReal ? ONE_YEAR : 0);
-        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/").setCachePeriod(isReal ? ONE_YEAR : 0);
-        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/").setCachePeriod(isReal ? ONE_YEAR : 0);
-        registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/").setCachePeriod(isReal ? ONE_YEAR : 0);
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/").setCachePeriod(isReal ? ONE_YEAR : 0);
+        registry.addResourceHandler("/font/**").addResourceLocations("classpath:/static/font/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
+        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
+        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
+        registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
     }
-
-    @Autowired
-    private BUtil bUtil;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -105,7 +100,7 @@ public class ViewResolverConfiguration extends WebMvcAutoConfiguration.WebMvcAut
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setCacheSeconds(bUtil.isRealMode() ? -1 : 3600);
         messageSource.setBasename("classpath:i18n/messages");
-        messageSource.setDefaultEncoding(CHARACTER_ENCODING.name());
+        messageSource.setDefaultEncoding(Constant.CHARACTER_ENCODING.name());
         messageSource.setFallbackToSystemLocale(false);
         return messageSource;
     }
@@ -267,13 +262,13 @@ public class ViewResolverConfiguration extends WebMvcAutoConfiguration.WebMvcAut
         abstract TemplateMode getTemplateMode();
 
         public String getCharacterEncoding() {
-            return CHARACTER_ENCODING.name();
+            return Constant.CHARACTER_ENCODING.name();
         }
 
         @Override
         public String toString() {
             return MoreObjects.toStringHelper(this)
-                    .add("CHARACTER_ENCODING", CHARACTER_ENCODING.name())
+                    .add("CHARACTER_ENCODING", Constant.CHARACTER_ENCODING.name())
                     .add("ContentType", getContentType())
                     .add("Prefix", getPrefix())
                     .add("Suffix", getSuffix())

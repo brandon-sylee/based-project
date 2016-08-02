@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,7 +27,7 @@ import javax.annotation.PostConstruct;
  * Created by Naver on 2016-07-22.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = BasedProjectApplication.class)
+@SpringBootTest(classes = BasedProjectApplication.class)
 @WebAppConfiguration
 @EnableAutoConfiguration(exclude = ThymeleafAutoConfiguration.class)
 @EnableTransactionManagement

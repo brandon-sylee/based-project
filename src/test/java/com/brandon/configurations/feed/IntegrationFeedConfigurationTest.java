@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.PollableChannel;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -19,7 +20,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Created by Naver on 2016-07-29.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = BasedProjectApplication.class)
+@SpringBootTest(classes = BasedProjectApplication.class)
 @WebAppConfiguration
 public class IntegrationFeedConfigurationTest {
     final Logger logger = getLogger(getClass());
@@ -28,6 +29,7 @@ public class IntegrationFeedConfigurationTest {
     PollableChannel googleNewChannel;
 
     @Test
+    @SuppressWarnings("unckecked")
     public void feed() throws Exception {
         for (int i = 0; i < 10; i++) {
             Message<SyndEntry> message = (Message<SyndEntry>) googleNewChannel.receive(1000);
