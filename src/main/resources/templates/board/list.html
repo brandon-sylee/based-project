@@ -1,63 +1,66 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>List</title>
-    <link rel="stylesheet" type="text/css" media="screen" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/common.css}"/>
-</head>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org" layout:decorator="/templates/base">
 <body>
-여기는 목록
-<section>
-    <fieldset>
-        <legend>버튼 및 검색 영역</legend>
-        <ul>
-            <li><a th:href="@{/board/write}">글쓰기</a></li>
-        </ul>
-    </fieldset>
+<section layout:fragment="content">
+    <section>
+        <fieldset>
+            <legend>버튼 및 검색 영역</legend>
+            <ul>
+                <li><a th:href="@{/board/write}">글쓰기</a></li>
+            </ul>
+        </fieldset>
+    </section>
+    <section>
+        <fieldset>
+            <legend>목록</legend>
+            <div class="panel panel-default">
+                <div class="panel-heading">목록</div>
+                <div class="panel-body"><p>Description</p></div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>제목</th>
+                        <th>날짜 긴타입</th>
+                        <th>날짜 중간타입</th>
+                        <th>날짜 짧타입</th>
+                        <th>표준시</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="article : ${articles.content}">
+                        <td th:text="${article.subject}">여기는 제목</td>
+                        <td th:text="${article.localizedDateTimeLong}">여기는 날짜</td>
+                        <td th:text="${article.localizedDateTime}">여기는 날짜</td>
+                        <td th:text="${article.localizedDateTimeShort}">여기는 날짜</td>
+                        <td th:text="${#calendars.format(article.createdOnUTCBased, 'yyyy-MM-dd hh:mm:ss')}">여기는 UTC 날짜</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+    </section>
+    <section>
+        <fieldset th:if="${articles.totalPages>0}">
+            <legend>페이징</legend>
+            <ul class="pagination">
+                <li>
+                    <a th:if='${not articles.first}' th:href='@{?(page=0,size=${articles.size})}'>&larr;</a>
+                    <a th:if='${articles.first}' href="javascript:void(0);">&larr;</a>
+                </li>
+                <li th:each="pageNo : ${#numbers.sequence(0, articles.totalPages-1)}">
+                    <a th:href="@{?(page=${pageNo},size=${articles.size})}" th:text="${pageNo+1}"></a>
+                </li>
+                <li>
+                    <a th:if='${not articles.last}' th:href='@{?(page=${articles.number+1},size=${articles.size})}'>&rarr;</a>
+                    <a th:if='${articles.last}' href="javascript:void(0);">&rarr;</a>
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset>
+            <legend>검색</legend>
+            <input type="text" name="search"/>
+        </fieldset>
+    </section>
 </section>
-<section>
-    <fieldset>
-        <legend>목록</legend>
-        <ul>
-            <li>제목</li>
-            <li>날짜</li>
-        </ul>
-        <ul th:each="article : ${articles.content}">
-            <li th:text="${article.subject}">여기는 제목</li>
-            <li th:text="${article.localizedDateTimeLong}">여기는 날짜</li>
-            <li th:text="${article.localizedDateTime}">여기는 날짜</li>
-            <li th:text="${article.localizedDateTimeShort}">여기는 날짜</li>
-            <li th:text="${#calendars.format(article.createdOnUTCBased, 'yyyy-MM-dd hh:mm:ss')}">여기는 UTC 날짜</li>
-        </ul>
-    </fieldset>
-</section>
-<section>
-    <fieldset th:if="${articles.totalPages>0}">
-        <legend>페이징</legend>
-        <ul>
-            <li>
-                <a th:if='${not articles.first}' th:href='@{?(page=0,size=${articles.size})}'>&larr;</a>
-                <a th:if='${articles.first}' href="javascript:void(0);">&larr;</a>
-            </li>
-            <li th:each="pageNo : ${#numbers.sequence(0, articles.totalPages-1)}">
-                <a th:href="@{?(page=${pageNo},size=${articles.size})}" th:text="${pageNo+1}"></a>
-            </li>
-            <li>
-                <a th:if='${not articles.last}' th:href='@{?(page=${articles.number+1},size=${articles.size})}'>&rarr;</a>
-                <a th:if='${articles.last}' href="javascript:void(0);">&rarr;</a>
-            </li>
-        </ul>
-    </fieldset>
-    <fieldset>
-        <legend>검색</legend>
-        <input type="text" name="search"/>
-    </fieldset>
-</section>
-<script type="text/javascript" th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/common.js}"></script>
 </body>
 </html>

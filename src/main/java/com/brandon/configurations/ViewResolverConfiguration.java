@@ -4,6 +4,7 @@ import com.brandon.BasedProjectApplication;
 import com.brandon.Constant;
 import com.brandon.utils.BUtil;
 import com.google.common.base.MoreObjects;
+import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.messageresolver.SpringMessageResolver;
@@ -33,6 +35,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+import java.util.Arrays;
 import java.util.TimeZone;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -50,6 +53,11 @@ public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implement
     private BUtil bUtil;
 
     @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         boolean isReal = bUtil.isRealMode();
         registry.addResourceHandler("/font/**").addResourceLocations("classpath:/static/font/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
@@ -57,11 +65,6 @@ public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implement
         registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
         registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
     }
 
     @Bean
@@ -127,14 +130,15 @@ public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implement
     private ViewResolver makeViewResolver(TEMPLATE_TYPED template_typed, SpringMessageResolver springMessageResolver) {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setApplicationContext(applicationContext);
-        resolver.setTemplateEngine(templateEngine(templateResolver(template_typed), springMessageResolver));
         resolver.setOrder(template_typed.ordinal() + 1);
         switch (template_typed) {
             case JAVASCRIPT:
             case CSS:
                 resolver.setViewNames(template_typed.getViewNames());
+                resolver.setTemplateEngine(templateEngine(templateResolver(template_typed), springMessageResolver));
                 break;
             case HTML:
+                resolver.setTemplateEngine(templateEngine(templateResolver(template_typed), springMessageResolver, new Java8TimeDialect(), new LayoutDialect()));
                 break;
         }
         resolver.setCache(bUtil.isRealMode());
@@ -143,11 +147,13 @@ public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implement
         return resolver;
     }
 
-    private TemplateEngine templateEngine(ITemplateResolver templateResolver, SpringMessageResolver springMessageResolver) {
+    private TemplateEngine templateEngine(ITemplateResolver templateResolver, SpringMessageResolver springMessageResolver, IDialect... dialects) {
         SpringTemplateEngine engine = new SpringTemplateEngine();
         engine.setTemplateResolver(templateResolver);
         engine.setMessageResolver(springMessageResolver);
-        engine.addDialect(new Java8TimeDialect());
+        if (dialects != null) {
+            Arrays.asList(dialects).stream().forEach(x -> engine.addDialect(x));
+        }
         return engine;
     }
 

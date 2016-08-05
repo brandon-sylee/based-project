@@ -1,29 +1,25 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org" layout:decorator="/templates/base">
 <body>
-
-<form method="post" th:action="@{/board/write}" th:object="${normalBoardModel}">
-    <table>
-        <thead>
+<section layout:fragment="content">
+    <form method="post" th:action="@{/board/write}" th:object="${normalBoardModel}">
+        <table>
+            <thead>
+            </thead>
+            <tbody>
             <tr>
                 <th>제목</th>
-                <th>내용</th>
+                <td><input th:class="form-control" th:type="text" th:name="subject" th:field="*{subject}"/><p th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></p></td>
             </tr>
-        </thead>
-        <tbody>
             <tr>
-                <td><input th:type="text" th:name="subject" th:field="*{subject}"/><p th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></p></td>
-                <td><textarea th:name="content" th:field="*{content}"/><p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p></td>
+                <th>내용</th>
+                <td><textarea th:class="form-control" th:name="content" th:field="*{content}"/><p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p></td>
             </tr>
-        </tbody>
-    </table>
-    <button>Form 쓰기</button>
-</form>
-
-<button type="button">Ajax Restful 쓰기</button>
+            </tbody>
+        </table>
+        <button th:class="btn-primary">Form 쓰기</button>
+        <button type="button" th:class="btn-primary">Ajax Restful 쓰기</button>
+    </form>
+</section>
 </body>
 </html>
