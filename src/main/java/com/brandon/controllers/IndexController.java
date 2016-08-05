@@ -22,7 +22,7 @@ public class IndexController {
     @Autowired
     MessageSource messageSource;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value={"", "/"}, method = RequestMethod.GET)
     public String index() {
         return "index";
     }

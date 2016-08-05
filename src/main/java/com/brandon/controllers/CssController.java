@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 public class CssController {
-    @RequestMapping(value = "common.css", method = RequestMethod.GET)
+    @RequestMapping(value = "common.css", method = RequestMethod.GET, produces = "text/css")
     public String common(Model model) {
         model.addAttribute("themeBackgroundColor", "blue");
         return "common.css";

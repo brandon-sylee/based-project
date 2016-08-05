@@ -21,7 +21,7 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.thymeleaf.TemplateEngine;
@@ -43,7 +43,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackageClasses = BasedProjectApplication.class)
-public class ViewResolverConfiguration extends WebMvcConfigurationSupport implements ApplicationContextAware {
+public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implements ApplicationContextAware {
     final Logger logger = getLogger(getClass());
     private ApplicationContext applicationContext;
     @Autowired
@@ -52,7 +52,6 @@ public class ViewResolverConfiguration extends WebMvcConfigurationSupport implem
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         boolean isReal = bUtil.isRealMode();
-        registry.setOrder(Integer.MIN_VALUE);
         registry.addResourceHandler("/font/**").addResourceLocations("classpath:/static/font/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
         registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
         registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
@@ -129,10 +128,12 @@ public class ViewResolverConfiguration extends WebMvcConfigurationSupport implem
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setApplicationContext(applicationContext);
         resolver.setTemplateEngine(templateEngine(templateResolver(template_typed), springMessageResolver));
+        resolver.setOrder(template_typed.ordinal() + 1);
         switch (template_typed) {
             case JAVASCRIPT:
             case CSS:
                 resolver.setViewNames(template_typed.getViewNames());
+                break;
             case HTML:
                 break;
         }
@@ -168,33 +169,7 @@ public class ViewResolverConfiguration extends WebMvcConfigurationSupport implem
     }
 
     enum TEMPLATE_TYPED {
-        HTML {
-            @Override
-            String getSuffix() {
-                return ".html";
-            }
-
-            @Override
-            String[] getViewNames() {
-                return array("*.html");
-            }
-
-            @Override
-            String getContentType() {
-                return "text/html";
-            }
-
-            @Override
-            String getPrefix() {
-                return "classpath:templates/";
-            }
-
-            @Override
-            TemplateMode getTemplateMode() {
-                return TemplateMode.HTML;
-            }
-
-        }, CSS {
+        CSS {
             @Override
             String getSuffix() {
                 return ".css";
@@ -245,6 +220,32 @@ public class ViewResolverConfiguration extends WebMvcConfigurationSupport implem
             TemplateMode getTemplateMode() {
                 return TemplateMode.JAVASCRIPT;
             }
+        }, HTML {
+            @Override
+            String getSuffix() {
+                return ".html";
+            }
+
+            @Override
+            String[] getViewNames() {
+                return array("*.html");
+            }
+
+            @Override
+            String getContentType() {
+                return "text/html";
+            }
+
+            @Override
+            String getPrefix() {
+                return "classpath:templates/";
+            }
+
+            @Override
+            TemplateMode getTemplateMode() {
+                return TemplateMode.HTML;
+            }
+
         };
 
         private static String[] array(String... args) {
