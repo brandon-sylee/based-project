@@ -1,14 +1,13 @@
 package com.brandon.services.jobs;
 
 import com.google.common.collect.Queues;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 
 import java.util.Queue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
+import java.util.Random;
+import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -18,35 +17,38 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class JobManagerServiceTest {
     final Logger logger = getLogger(getClass());
-
-    ExecutorService executorService = Executors.newSingleThreadScheduledExecutor(Executors.defaultThreadFactory());
     final ThreadGroup threadGroup = new ThreadGroup("jobs");
+    ExecutorService executorService = Executors.newSingleThreadScheduledExecutor(Executors.defaultThreadFactory());
     ExecutorService jobs = Executors.newFixedThreadPool(4, r -> new Thread(threadGroup, r));
     Queue<Runnable> tasks = Queues.newConcurrentLinkedQueue();
+    private Random random = new Random();
 
     @Test
-    public void 쓰레드는이렇게() throws Exception {
-        IntStream.range(0, 10).forEach(x -> {
-            executorService.submit(() -> {
-                tasks.stream().peek(runnable -> jobs.submit(runnable)).forEach(runnable -> tasks.poll());
-            });
-
-            try {
-                TimeUnit.SECONDS.sleep(1);
-                IntStream.range(1, 10).forEach(value -> {
-                    tasks.add(() -> {
-                        sleep("gogo", 5);
-                    });
-                });
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-        while (threadGroup.activeCount() <=0) {
-            sleep("sleep", 1);
+    public void threadChecker() throws Exception {
+        while (true) {
             logger.info("Current Active Count {}", threadGroup.activeCount());
+            executorService.submit(() ->
+                    tasks.parallelStream().forEach(runnable -> {
+                        Future<?> future = jobs.submit(tasks.poll());
+                        try {
+                            future.get(7, TimeUnit.SECONDS);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (TimeoutException e) {
+                            e.printStackTrace();
+                        }
+                    })
+            );
+            sleep("sleep", 1);
+            if (threadGroup.activeCount() <= 0) break;
         }
+    }
+
+    @Before
+    public void makeTask() {
+        IntStream.range(0, 100).forEach(x -> tasks.add(() -> sleep("gogo", randomInt(1, 10))));
     }
 
     private void sleep(String txt, int second) {
@@ -56,5 +58,9 @@ public class JobManagerServiceTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private int randomInt(int min, int max) {
+        return random.nextInt((max - min) + 1) + min;
     }
 }

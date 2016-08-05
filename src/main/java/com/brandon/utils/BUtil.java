@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * Created by Naver on 2016-07-20.
@@ -18,10 +19,12 @@ public class BUtil {
     @Autowired
     private Environment environment;
     private ObjectMapper objectMapper;
+    private Random random;
 
     @PostConstruct
     private void init() {
         objectMapper = new ObjectMapper();
+        random = new Random();
     }
 
     public boolean isRealMode() {
@@ -35,5 +38,9 @@ public class BUtil {
 
     public String prettyPrinter(Object obj) throws JsonProcessingException {
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+    }
+
+    public int randomInt(int min, int max) {
+        return random.nextInt((max - min) + 1) + min;
     }
 }
