@@ -48,6 +48,10 @@ public class BoardConverter<T extends BoardAttributes> {
         return t;
     }
 
+    public MContentEntity contentsSearch(String query) {
+        return new MContentEntity(query);
+    }
+
     private T create(Class<T> tClass) {
         try {
             return tClass.newInstance();
@@ -56,4 +60,6 @@ public class BoardConverter<T extends BoardAttributes> {
             return null;
         }
     }
+
+
 }

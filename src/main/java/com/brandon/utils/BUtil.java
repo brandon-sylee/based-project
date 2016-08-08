@@ -36,8 +36,12 @@ public class BUtil {
         return objectMapper;
     }
 
-    public String prettyPrinter(Object obj) throws JsonProcessingException {
-        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+    public String prettyPrinter(Object obj) {
+        try {
+            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+        }catch (JsonProcessingException e) {
+            return obj.toString();
+        }
     }
 
     public int randomInt(int min, int max) {

@@ -32,7 +32,7 @@ public class MBoardEntity implements Serializable {
 
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, targetEntity = MContentEntity.class)
     @JoinColumn(name = "master_board_id")
-    private Collection<MContentEntity> contentEntities;
+    private Collection<MContentEntity> contents;
 
     private LocalDateTime created;
     private LocalDateTime updated;
@@ -43,8 +43,8 @@ public class MBoardEntity implements Serializable {
 
     public String getContent(String division) {
         StringBuffer content = new StringBuffer();
-        if ( contentEntities != null )
-            getContentEntities().stream().forEach(x -> content.append(x.getContents() + (StringUtils.hasLength(division) ? division : "")));
+        if ( contents != null )
+            getContents().stream().forEach(x -> content.append(x.getContents() + (StringUtils.hasLength(division) ? division : "")));
         return content.toString();
     }
 

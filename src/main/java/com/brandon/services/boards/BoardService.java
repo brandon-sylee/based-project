@@ -16,4 +16,6 @@ public interface BoardService<T> {
     boolean update(Long id, T t);
 
     boolean remove(Long id);
+
+    Page<T> search(Pageable pageable, String query);
 }

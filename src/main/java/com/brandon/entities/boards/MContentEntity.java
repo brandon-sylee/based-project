@@ -24,6 +24,10 @@ public class MContentEntity implements Serializable {
     @Column
     private String contents;
 
+    public MContentEntity(String contents) {
+        this.contents = contents;
+    }
+
     public MContentEntity(Long boardId, String contents) {
         this.boardId = boardId;
         this.contents = contents;
