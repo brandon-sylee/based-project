@@ -44,21 +44,24 @@
             <legend>페이징</legend>
             <ul class="pagination">
                 <li>
-                    <a th:if='${not articles.first}' th:href='@{?(page=0,size=${articles.size})}'>&larr;</a>
+                    <a th:if='${not articles.first}' th:href='@{?(page=0,size=${articles.size},q=${queryString})}'>&larr;</a>
                     <a th:if='${articles.first}' href="javascript:void(0);">&larr;</a>
                 </li>
                 <li th:each="pageNo : ${#numbers.sequence(0, articles.totalPages-1)}">
-                    <a th:href="@{?(page=${pageNo},size=${articles.size})}" th:text="${pageNo+1}"></a>
+                    <a th:href="@{?(page=${pageNo},size=${articles.size},q=${queryString})}" th:text="${pageNo+1}"></a>
                 </li>
                 <li>
-                    <a th:if='${not articles.last}' th:href='@{?(page=${articles.number+1},size=${articles.size})}'>&rarr;</a>
+                    <a th:if='${not articles.last}' th:href='@{?(page=${articles.number+1},size=${articles.size},q=${queryString})}'>&rarr;</a>
                     <a th:if='${articles.last}' href="javascript:void(0);">&rarr;</a>
                 </li>
             </ul>
         </fieldset>
         <fieldset>
             <legend>검색</legend>
-            <input type="text" name="search"/>
+            <div class="input-group">
+                <input type="text" name="q" id="q" class="form-control" th:value="${queryString}"/>
+                <span class="input-group-btn"><button type="button" class="btn btn-default" id="search">검색</button></span>
+            </div>
         </fieldset>
     </section>
 </section>

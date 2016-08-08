@@ -143,10 +143,13 @@ front.modules.register(function() {
 });
 
 front.modules.register(function() {
-    /* 테스트 모듈 2 */
     return {
         "$$START_UP$$" : function() {
-            console.log("테스트 모듈 2 등록 후 StartUp 호출됨");
+            if ( jQuery ) {
+                $("#search").click(function () {
+                    location.href="?q="+$("#q").val();
+                });
+            }
         }
     }
 });
