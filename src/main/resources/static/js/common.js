@@ -143,12 +143,19 @@ front.modules.register(function() {
 });
 
 front.modules.register(function() {
+    var header = $(".navbar-wrapper .container");
     return {
         "$$START_UP$$" : function() {
             if ( jQuery ) {
                 $("#search").click(function () {
                     location.href="?q="+$("#q").val();
                 });
+                $(document).bind("scroll", function() {
+                    var sTop = document.documentElement.scrollTop || document.body.scrollTop;
+                    var hTop = header.offset().top;
+                    console.log("!", sTop < hTop);
+                });
+
             }
         }
     }
