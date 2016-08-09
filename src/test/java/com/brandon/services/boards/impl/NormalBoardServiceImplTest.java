@@ -44,7 +44,7 @@ public class NormalBoardServiceImplTest {
 
     @Test
     public void lists() throws Exception {
-        logger.debug("{}", service.lists(new PageRequest(1, 20)));
+        logger.debug("{}", service.lists(new PageRequest(1, 20), null));
     }
 
     @Test
@@ -71,7 +71,10 @@ public class NormalBoardServiceImplTest {
 
     @Test
     public void search() throws Exception {
-        logger.debug("{}", butil.prettyPrinter(service.search(new PageRequest(0, 10), "1")));
+        logger.debug("{}", butil.prettyPrinter(service.lists(new PageRequest(0, 5), "1 ")));
+        logger.debug("{}", butil.prettyPrinter(service.lists(new PageRequest(0, 5), "?")));
+        logger.debug("{}", butil.prettyPrinter(service.lists(new PageRequest(0, 5), "%")));
+        logger.debug("{}", butil.prettyPrinter(service.lists(new PageRequest(0, 5), "내 ~")));
     }
 
     private NormalBoardModel normalBoardModel(int x) {

@@ -38,7 +38,7 @@ public class BoardController {
     @RequestMapping("list")
     public String list(Model model, @PageableDefault(sort = {"mid"}, direction = Sort.Direction.DESC, size = 5) Pageable pageable, @RequestParam(value = "q", required = false) String query) throws JsonProcessingException {
         model.addAttribute("queryString", StringUtils.hasLength(query)? query : "");
-        model.addAttribute("articles", StringUtils.hasLength(query) ? service.search(pageable, query) : service.lists(pageable));
+        model.addAttribute("articles", service.lists(pageable, query));
         return "board/list";
     }
 

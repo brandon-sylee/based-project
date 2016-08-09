@@ -11,5 +11,5 @@ import java.util.List;
  */
 @Repository
 public interface ContentRepository extends JpaRepository<MContentEntity, Long> {
-    List<MContentEntity> findByContentsContaining(String query);
+    List<MContentEntity> findByContentsContainingIgnoreCase(String query);
 }

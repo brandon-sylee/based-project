@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
  * Created by brandon Lee(lz90011@linecorp.com) on 2016-07-05.
  */
 public interface BoardService<T> {
-    Page<T> lists(Pageable pageable);
+    Page<T> lists(Pageable pageable, String query);
 
     T get(Long id);
 
@@ -16,6 +16,4 @@ public interface BoardService<T> {
     boolean update(Long id, T t);
 
     boolean remove(Long id);
-
-    Page<T> search(Pageable pageable, String query);
 }

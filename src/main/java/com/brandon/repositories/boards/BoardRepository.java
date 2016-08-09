@@ -13,5 +13,6 @@ import java.util.List;
  */
 @Repository
 public interface BoardRepository extends JpaRepository<MBoardEntity, Long> {
-    List<MBoardEntity> findByContentsInOrSubjectLikeOrderByMidDesc(List<MContentEntity> contentEntityCollections, String query, Pageable pageable);
+    List<MBoardEntity> findByContentsInOrSubjectLikeIgnoreCase(List<MContentEntity> contentEntityCollections, String query, Pageable pageable);
+    Long countByContentsInOrSubjectLikeIgnoreCase(List<MContentEntity> contentEntityCollections, String query);
 }

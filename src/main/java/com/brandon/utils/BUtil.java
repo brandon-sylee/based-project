@@ -39,7 +39,7 @@ public class BUtil {
     public String prettyPrinter(Object obj) {
         try {
             return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
-        }catch (JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             return obj.toString();
         }
     }

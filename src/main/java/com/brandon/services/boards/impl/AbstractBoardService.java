@@ -9,16 +9,15 @@ import com.brandon.services.boards.BoardService;
 import com.brandon.services.boards.converter.BoardConverter;
 import com.brandon.services.boards.models.BoardAttributes;
 import com.brandon.utils.BUtil;
-import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,11 +38,22 @@ public abstract class AbstractBoardService<T extends BoardAttributes> implements
 
     @Autowired
     protected BoardConverter<T> boardConverter;
+    @Autowired
+    BUtil bUtil;
 
     protected abstract Class<T> getTClass();
 
     @Transactional(readOnly = true)
-    public Page<T> lists(Pageable pageable) {
+    public Page<T> lists(Pageable pageable, String query) {
+        if (StringUtils.hasLength(query)) {
+            query = query.trim().replace("\\s{2,}"," ") + "%";
+            List<MContentEntity> contentEntities = contentRepository.findByContentsContainingIgnoreCase(query);
+            long total = repository.countByContentsInOrSubjectLikeIgnoreCase(contentEntities, query);
+            if (total > 0) {
+                List<T> result = repository.findByContentsInOrSubjectLikeIgnoreCase(contentEntities, query, pageable).parallelStream().map(mBoardEntity -> boardConverter.convertListModel(getTClass(), mBoardEntity)).collect(Collectors.toList());
+                return new PageImpl<>(result, pageable, total);
+            }
+        }
         return repository.findAll(pageable).map(source -> boardConverter.convertListModel(getTClass(), source));
     }
 
@@ -76,17 +86,5 @@ public abstract class AbstractBoardService<T extends BoardAttributes> implements
         } catch (Exception e) {
             return false;
         }
-    }
-
-    @Autowired
-    BUtil bUtil;
-
-    @Override
-    public Page<T> search(Pageable pageable, String query) {
-        query = "%"+query.replace(" ", "%")+"%";
-        List<MBoardEntity> boardEntities = repository.findByContentsInOrSubjectLikeOrderByMidDesc(contentRepository.findByContentsContaining(query), query, pageable);
-        List<T> result = boardEntities.parallelStream().map(mBoardEntity -> boardConverter.convertListModel(getTClass(), mBoardEntity)).collect(Collectors.toList());
-        int total = result.size();
-        return new PageImpl<>(result, pageable, total);
     }
 }
