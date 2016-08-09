@@ -83,7 +83,8 @@ public abstract class AbstractBoardService<T extends BoardAttributes> implements
 
     @Override
     public Page<T> search(Pageable pageable, String query) {
-        List<MBoardEntity> boardEntities = repository.findByContentsInOrSubjectLikeOrderByMidDesc(contentRepository.findByContentsContaining("%"+query+"%"), "%"+query+"%");
+        query = "%"+query.replace(" ", "%")+"%";
+        List<MBoardEntity> boardEntities = repository.findByContentsInOrSubjectLikeOrderByMidDesc(contentRepository.findByContentsContaining(query), query, pageable);
         List<T> result = boardEntities.parallelStream().map(mBoardEntity -> boardConverter.convertListModel(getTClass(), mBoardEntity)).collect(Collectors.toList());
         int total = result.size();
         return new PageImpl<>(result, pageable, total);

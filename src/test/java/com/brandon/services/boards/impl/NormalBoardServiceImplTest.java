@@ -39,7 +39,7 @@ public class NormalBoardServiceImplTest {
 
     @PostConstruct
     public void init() throws Exception{
-        for(int x=0;x<5;x++) service.write(normalBoardModel(x));
+        for(int x=0;x<15;x++) service.write(normalBoardModel(x));
     }
 
     @Test
@@ -67,6 +67,11 @@ public class NormalBoardServiceImplTest {
     public void remove() throws Exception {
         Assert.assertTrue(service.remove(2L));
         Assert.assertNull(service.get(2L));
+    }
+
+    @Test
+    public void search() throws Exception {
+        logger.debug("{}", butil.prettyPrinter(service.search(new PageRequest(0, 10), "1")));
     }
 
     private NormalBoardModel normalBoardModel(int x) {
