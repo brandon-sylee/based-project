@@ -1,6 +1,6 @@
-<!-- 참고 http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#boot-features-logging -->
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <!-- 참고 http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#boot-features-logging -->
     <!-- application.yml에 설정된 내용을 가져올 수 있다. -->
     <!--<springProperty scope="context" name="myService" source="myapp.fluentd.host" defaultValue="localhost"/>-->
 
