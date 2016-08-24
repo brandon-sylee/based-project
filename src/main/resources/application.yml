@@ -1,0 +1,88 @@
+
+---
+
+spring:
+  profiles: development
+  http:
+      encoding:
+        enabled: true
+        force: true
+        charset: UTF-8
+  messages:
+    encoding: UTF-8
+    cache-seconds: 3600
+    fallback-to-system-locale: true
+  session:
+    store-type: hash_map
+  resources:
+    chain:
+      enabled: true
+      cache: true
+      strategy:
+        content:
+          enabled: true
+        fixed:
+          enabled: true
+  jpa:
+    show-sql: true
+
+---
+
+spring:
+  profiles: production
+  http:
+      encoding:
+        enabled: true
+        force: true
+        charset: UTF-8
+  messages:
+    encoding: UTF-8
+    cache-seconds: -1
+    fallback-to-system-locale: true
+  session:
+    store-type: hash_map
+  resources:
+    chain:
+      enabled: true
+      cache: true
+      strategy:
+        content:
+          enabled: true
+        fixed:
+          enabled: true
+    cache-period: 31556926
+  jpa:
+    show-sql: false
+
+---
+
+spring:
+  profiles: logging-info
+logging:
+  level:
+    org.thymeleaf: info
+    org.springframework.web: info
+    org.hibernate.SQL: info
+    org.h2.server.web: info
+    com.brandon: info
+
+---
+
+spring:
+  profiles: logging-debug
+logging:
+  level:
+    org.thymeleaf: INFO
+    org.springframework.web: INFO
+    org.hibernate.SQL: INFO
+    org.h2.server.web: INFO
+    com.brandon: debug
+
+---
+
+spring:
+  profiles: logging-daily
+logging:
+  config: classpath:logs/logback-spring.xml
+
+---

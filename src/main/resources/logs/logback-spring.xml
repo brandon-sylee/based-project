@@ -1,0 +1,56 @@
+<!-- 참고 http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#boot-features-logging -->
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- application.yml에 설정된 내용을 가져올 수 있다. -->
+    <!--<springProperty scope="context" name="myService" source="myapp.fluentd.host" defaultValue="localhost"/>-->
+
+    <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>applicatoin.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>5</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{%file:%line} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <springProfile name="production"><!-- 프로파일별로 설정 -->
+        <appender name="targetRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <prudent>true</prudent>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>target.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <maxHistory>5</maxHistory>
+            </rollingPolicy>
+            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+                <level>INFO</level>
+            </filter>
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} %-5level %logger{%file:%line} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <logger name="com.brandon.*" level="INFO">
+            <appender-ref ref="targetRollingFileAppender"/>
+        </logger>
+    </springProfile>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{%file:%line} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.springframework.*" level="INFO"/>
+    <logger name="org.springframework.web" level="INFO"/>
+    <logger name="org.thymeleaf" level="INFO"/>
+    <logger name="org.hibernate.SQL" level="INFO"/>
+    <logger name="org.h2.server.web" level="INFO"/>
+
+    <root level="INFO">
+        <appender-ref ref="dailyRollingFileAppender"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

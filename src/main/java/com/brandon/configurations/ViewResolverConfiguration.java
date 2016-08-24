@@ -18,6 +18,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -36,6 +37,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.TimeZone;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -65,6 +67,14 @@ public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implement
         registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
         registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/").setCachePeriod(isReal ? Constant.ONE_YEAR : 0);
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        /* ArgumentResolver
+        * Pageable과 같이 처리하기 위해서는 argumentResolver를 작성해야함
+        *
+        * */
     }
 
     @Bean
