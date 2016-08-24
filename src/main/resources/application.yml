@@ -25,7 +25,13 @@ spring:
           enabled: true
   jpa:
     show-sql: true
-
+logging:
+  level:
+    org.thymeleaf: INFO
+    org.springframework.web: INFO
+    org.hibernate.SQL: INFO
+    org.h2.server.web: INFO
+    com.brandon: debug
 ---
 
 spring:
@@ -53,35 +59,6 @@ spring:
     cache-period: 31556926
   jpa:
     show-sql: false
-
----
-
-spring:
-  profiles: logging-info
-logging:
-  level:
-    org.thymeleaf: info
-    org.springframework.web: info
-    org.hibernate.SQL: info
-    org.h2.server.web: info
-    com.brandon: info
-
----
-
-spring:
-  profiles: logging-debug
-logging:
-  level:
-    org.thymeleaf: INFO
-    org.springframework.web: INFO
-    org.hibernate.SQL: INFO
-    org.h2.server.web: INFO
-    com.brandon: debug
-
----
-
-spring:
-  profiles: logging-daily
 logging:
   config: classpath:logs/logback-spring.xml
 
