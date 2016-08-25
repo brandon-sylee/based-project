@@ -18,14 +18,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/","/board/list/**").permitAll()
-                .antMatchers("/common.js", "/common.css", "/font/**", "/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+                .antMatchers("/common.js", "/common.css", "/font/**", "/css/**", "/js/**", "/images/**", "/webjars/**", "/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
+                .loginProcessingUrl("/login")
                 .loginPage("/")
                 .permitAll()
                 .and()
                 .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
                 .permitAll();
     }
 

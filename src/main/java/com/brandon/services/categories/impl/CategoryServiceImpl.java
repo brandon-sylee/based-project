@@ -6,13 +6,14 @@ import com.brandon.services.categories.CategoryService;
 import com.brandon.services.categories.converts.CategoryConverts;
 import com.brandon.services.categories.models.CategoryModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by Naver on 2016-08-08.
+ * Created by brandonLee on 2016-08-08.
  */
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -26,11 +27,11 @@ public class CategoryServiceImpl implements CategoryService {
         return repository.findByParentIs(-1L).parallelStream().map(categoryEntity -> converts.convertEntityToModel(categoryEntity)).collect(Collectors.toList());
     }
 
+    @Cacheable("categories")
     @Override
     public List<CategoryModel> getCategories() {
-        List<CategoryModel> roots;
         List<CategoryModel> source = repository.findAll().parallelStream().map(categoryEntity -> converts.convertEntityToModel(categoryEntity)).collect(Collectors.toList());
-        roots = source.parallelStream().filter(categoryModel -> categoryModel.getParent().equals(-1L)).collect(Collectors.toList());
+        List<CategoryModel> roots = source.parallelStream().filter(categoryModel -> categoryModel.getParent().equals(-1L)).collect(Collectors.toList());
         leafCategory(source, roots, 1);
         return roots;
     }

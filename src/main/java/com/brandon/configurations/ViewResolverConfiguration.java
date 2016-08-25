@@ -2,6 +2,8 @@ package com.brandon.configurations;
 
 import com.brandon.BasedProjectApplication;
 import com.brandon.Constant;
+import com.brandon.interceptors.CategoryInterceptor;
+import com.brandon.services.categories.CategoryService;
 import com.brandon.utils.BUtil;
 import com.google.common.base.MoreObjects;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
@@ -52,6 +54,8 @@ public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implement
     private ApplicationContext applicationContext;
     @Autowired
     private BUtil bUtil;
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -76,6 +80,12 @@ public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implement
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(pageableHandlerMethodArgumentResolver());
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LocaleChangeInterceptor());
+        registry.addInterceptor(new CategoryInterceptor(categoryService));
     }
 
     @Bean
@@ -108,11 +118,6 @@ public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implement
         localeResolver.setCookieName("locale");
         localeResolver.setCookieMaxAge(bUtil.isRealMode() ? 3600 : -1);
         return localeResolver;
-    }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LocaleChangeInterceptor());
     }
 
     @Bean

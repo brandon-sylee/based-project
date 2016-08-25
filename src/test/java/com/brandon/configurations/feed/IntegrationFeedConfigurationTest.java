@@ -29,7 +29,7 @@ public class IntegrationFeedConfigurationTest {
     @Test
     @SuppressWarnings("unckecked")
     public void feed() throws Exception {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             Message<SyndEntry> message = (Message<SyndEntry>) googleNewChannel.receive(1000);
             if (message != null) {
                 SyndEntry entry = message.getPayload();

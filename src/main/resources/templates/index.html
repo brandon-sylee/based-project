@@ -2,7 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org" layout:decorator="/templates/base">
 <body>
 <section layout:fragment="content">
-    <p>WelCome!!!!!!!!!!!!!!</p>
+    <fieldset>
+        <legend>Google New Top 100</legend>
+        <section>
+            <ul th:each="news : ${googleNewTop10}">
+                <li><a href="javascript:void(0);" th:href="${news.link}" th:text="${news.subject}">news</a></li>
+            </ul>
+        </section>
+    </fieldset>
 </section>
 </body>
 </html>

@@ -41,16 +41,16 @@ public class BoardController {
 
     @GetMapping("{id:\\d+}")
     public String read(Model model, @PathVariable Long id) {
-        model.addAttribute("board", service.get(id));
+        model.addAttribute("article", service.get(id));
         return "board/read";
     }
 
-    @RequestMapping(value = "write", method = RequestMethod.GET)
+    @GetMapping("write")
     public String write(NormalBoardModel normalBoardModel) {
         return "board/write";
     }
 
-    @RequestMapping(value = "write", method = RequestMethod.POST)
+    @PostMapping("write")
     public String save(@Valid NormalBoardModel normalBoardModel, BindingResult bindingResult) {
         if (logger.isDebugEnabled()) {
             logger.debug("### BindingResult : {} /// {}", bindingResult.hasErrors(), normalBoardModel);
