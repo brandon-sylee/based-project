@@ -13,10 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -35,14 +32,14 @@ public class BoardController {
     @Autowired
     BUtil bUtil;
 
-    @RequestMapping("list")
+    @GetMapping
     public String list(Model model, @PageableDefault(sort = {"mid"}, direction = Sort.Direction.DESC, size = 5) Pageable pageable, @RequestParam(value = "q", required = false) String query) throws JsonProcessingException {
         model.addAttribute("queryString", StringUtils.hasLength(query) ? query : "");
         model.addAttribute("articles", service.lists(pageable, query));
         return "board/list";
     }
 
-    @RequestMapping(value = "{id:\\d+}", method = RequestMethod.GET)
+    @GetMapping("{id:\\d+}")
     public String read(Model model, @PathVariable Long id) {
         model.addAttribute("board", service.get(id));
         return "board/read";

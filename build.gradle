@@ -58,10 +58,13 @@ dependencies {
     /*compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive')*/
     compile('org.springframework.integration:spring-integration-feed:+')
 
+    compile("org.springframework.boot:spring-boot-starter-security")
+
     compile('org.thymeleaf:thymeleaf:3.0.1.RELEASE')
     compile('org.thymeleaf:thymeleaf-spring4:3.0.1.RELEASE')
     compile('org.thymeleaf:thymeleaf-testing:3.0.1.RELEASE')
     compile('org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.0.RELEASE')
+    compile('org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.0.RELEASE')
     compile group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '2.0.1'
 
     compile('com.google.guava:guava:19.0')

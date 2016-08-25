@@ -21,15 +21,13 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
+import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.messageresolver.SpringMessageResolver;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
@@ -71,6 +69,11 @@ public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implement
     }
 
     @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/login").setViewName("login");
+    }
+
+    @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(pageableHandlerMethodArgumentResolver());
     }
@@ -79,7 +82,6 @@ public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implement
     public PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver() {
         PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver = new PageableHandlerMethodArgumentResolver();
         pageableHandlerMethodArgumentResolver.setOneIndexedParameters(true);
-        //pageableHandlerMethodArgumentResolver.supportsParameter()
         return pageableHandlerMethodArgumentResolver;
     }
 
@@ -154,7 +156,7 @@ public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implement
                 resolver.setTemplateEngine(templateEngine(templateResolver(template_typed), springMessageResolver));
                 break;
             case HTML:
-                resolver.setTemplateEngine(templateEngine(templateResolver(template_typed), springMessageResolver, new Java8TimeDialect(), new LayoutDialect()));
+                resolver.setTemplateEngine(templateEngine(templateResolver(template_typed), springMessageResolver, new Java8TimeDialect(), new LayoutDialect(), new SpringSecurityDialect()));
                 break;
         }
         resolver.setCache(bUtil.isRealMode());
