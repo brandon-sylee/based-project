@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +36,7 @@ public class BoardController {
     BUtil bUtil;
 
     @RequestMapping("list")
-    public String list(Model model, @PageableDefault(sort = {"mid"}, size = 5) Pageable pageable, @RequestParam(value = "q", required = false) String query) throws JsonProcessingException {
+    public String list(Model model, @PageableDefault(sort = {"mid"}, direction = Sort.Direction.DESC, size = 5) Pageable pageable, @RequestParam(value = "q", required = false) String query) throws JsonProcessingException {
         model.addAttribute("queryString", StringUtils.hasLength(query) ? query : "");
         model.addAttribute("articles", service.lists(pageable, query));
         return "board/list";
