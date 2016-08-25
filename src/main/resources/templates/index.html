@@ -4,11 +4,7 @@
 <section layout:fragment="content">
     <fieldset>
         <legend>Google New Top 100</legend>
-        <section>
-            <ul th:each="news : ${googleNewTop10}">
-                <li><a href="javascript:void(0);" th:href="${news.link}" th:text="${news.subject}">news</a></li>
-            </ul>
-        </section>
+        <section><ul class="_news"></ul></section>
     </fieldset>
 </section>
 </body>

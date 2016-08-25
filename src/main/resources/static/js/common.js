@@ -132,8 +132,10 @@ front.util =(function(){
     };
 })();
 
+/**
+ * 로그를 on/off 하는 모듈
+ */
 front.modules.register(function() {
-    /* 테스트 모듈 1*/
     return {
         "$$START_UP$$" : function() {
             if (/*[[${isRealMode}]]*/false) front.modules.disableLogger();
@@ -149,6 +151,24 @@ front.modules.register(function() {
                 $("#search").click(function () {
                     location.href="?q="+$("#q").val();
                 });
+            }
+        }
+    }
+});
+
+/**
+ * new feed를 관리하는 모듈
+ */
+front.modules.register(function() {
+    return {
+        "$$START_UP$$" : function() {
+            if ( jQuery ) {
+                var area = $("._news");
+                setInterval(function() {
+                    $.getJSON("/api/news",null, function(response) {
+                        area.append("<li><a href='"+response.payload.link+"'>"+response.payload.title+"</a></li>");
+                    })
+                }, 1000);
             }
         }
     }
