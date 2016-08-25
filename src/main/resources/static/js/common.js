@@ -137,7 +137,6 @@ front.modules.register(function() {
     return {
         "$$START_UP$$" : function() {
             if (/*[[${isRealMode}]]*/false) front.modules.disableLogger();
-            console.log("테스트 모듈 1 등록 후 StartUp 호출됨");
         }
     }
 });
@@ -150,12 +149,6 @@ front.modules.register(function() {
                 $("#search").click(function () {
                     location.href="?q="+$("#q").val();
                 });
-                $(document).bind("scroll", function() {
-                    var sTop = document.documentElement.scrollTop || document.body.scrollTop;
-                    var hTop = header.offset().top;
-                    console.log("!", sTop < hTop);
-                });
-
             }
         }
     }

@@ -8,6 +8,7 @@ import com.brandon.repositories.boards.ContentRepository;
 import com.brandon.services.boards.BoardService;
 import com.brandon.services.boards.converter.BoardConverter;
 import com.brandon.services.boards.models.BoardAttributes;
+import com.brandon.services.boards.models.BoardPageableImpl;
 import com.brandon.utils.BUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +52,10 @@ public abstract class AbstractBoardService<T extends BoardAttributes> implements
             long total = repository.countByContentsInOrSubjectLikeIgnoreCase(contentEntities, query);
             if (total > 0) {
                 List<T> result = repository.findByContentsInOrSubjectLikeIgnoreCase(contentEntities, query, pageable).parallelStream().map(mBoardEntity -> boardConverter.convertListModel(getTClass(), mBoardEntity)).collect(Collectors.toList());
-                return new PageImpl<>(result, pageable, total);
+                return new BoardPageableImpl<>(result, pageable, total);
             }
         }
+
         return repository.findAll(pageable).map(source -> boardConverter.convertListModel(getTClass(), source));
     }
 

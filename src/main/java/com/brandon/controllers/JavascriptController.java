@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * Created by Naver on 2016-07-20.
+ * Created by brandon Lee on 2016-07-20.
  */
 @Controller
 public class JavascriptController {

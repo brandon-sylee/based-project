@@ -16,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -71,10 +72,15 @@ public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implement
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        /* ArgumentResolver
-        * Pageable과 같이 처리하기 위해서는 argumentResolver를 작성해야함
-        *
-        * */
+        argumentResolvers.add(pageableHandlerMethodArgumentResolver());
+    }
+
+    @Bean
+    public PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver() {
+        PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver = new PageableHandlerMethodArgumentResolver();
+        pageableHandlerMethodArgumentResolver.setOneIndexedParameters(true);
+        //pageableHandlerMethodArgumentResolver.supportsParameter()
+        return pageableHandlerMethodArgumentResolver;
     }
 
     @Bean

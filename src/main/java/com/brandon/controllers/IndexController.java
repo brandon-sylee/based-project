@@ -13,7 +13,7 @@ import java.util.Locale;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Created by Naver on 2016-07-20.
+ * Created by brandonLee on 2016-07-20.
  */
 @Controller
 public class IndexController {
