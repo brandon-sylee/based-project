@@ -2,14 +2,15 @@ package com.brandon.configurations;
 
 import com.brandon.BasedProjectApplication;
 import com.brandon.Constant;
-import com.brandon.interceptors.CategoryInterceptor;
+import com.brandon.interceptors.CommonAttributeInterceptor;
 import com.brandon.services.categories.CategoryService;
+import com.brandon.services.menus.MenuService;
 import com.brandon.utils.BUtil;
 import com.google.common.base.MoreObjects;
+import lombok.RequiredArgsConstructor;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
@@ -49,13 +50,13 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackageClasses = BasedProjectApplication.class)
+@RequiredArgsConstructor
 public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implements ApplicationContextAware {
     final Logger logger = getLogger(getClass());
+    private final BUtil bUtil;
+    private final CategoryService categoryService;
+    private final MenuService menuService;
     private ApplicationContext applicationContext;
-    @Autowired
-    private BUtil bUtil;
-    @Autowired
-    private CategoryService categoryService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -85,7 +86,7 @@ public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implement
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LocaleChangeInterceptor());
-        registry.addInterceptor(new CategoryInterceptor(categoryService));
+        registry.addInterceptor(new CommonAttributeInterceptor(categoryService, menuService));
     }
 
     @Bean

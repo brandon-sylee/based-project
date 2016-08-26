@@ -142,6 +142,21 @@ front.modules.register(function() {
         }
     }
 });
+/**
+ * 메뉴 클릭 시, active 설정
+ */
+front.modules.register(function() {
+    return {
+        "$$START_UP$$" : function() {
+            if ( jQuery ) {
+                $(".nav .navbar-nav a").on("click", function() {
+
+                });
+            }
+
+        }
+    }
+});
 
 front.modules.register(function() {
     var header = $(".navbar-wrapper .container");
@@ -180,7 +195,7 @@ front.modules.register(function() {
         "$$START_UP$$" : function() {
             if ( jQuery ) {
                 newsFunction();
-                setInterval(newsFunction, 5000);
+                setInterval(newsFunction, 30 * 1000);
             }
         }
     }

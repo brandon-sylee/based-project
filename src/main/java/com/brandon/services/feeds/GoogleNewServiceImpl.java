@@ -26,22 +26,23 @@ public class GoogleNewServiceImpl implements GoogleNewService {
     private final PollableChannel googleNewChannel;
     private final Queue<Message<SyndEntry>> news = new LinkedList<>();
 
-    @Cacheable(cacheNames = "googleNewTop100")
     public List<Message<SyndEntry>> recentlyTop10() {
         return news.parallelStream().sorted((o1, o2) ->
                 Long.compare(o1.getHeaders().getTimestamp(), o2.getHeaders().getTimestamp())
         ).limit(10).collect(Collectors.toList());
     }
 
-    @Scheduled(fixedRate = 1000L)
+    @Scheduled(fixedRate = 10 * 1000L, initialDelay = 10 * 1000L)
     public void jobs() {
-        Message<SyndEntry> message = (Message<SyndEntry>) googleNewChannel.receive(1000);
-        if (message == null) return;
-        news.add(message);
+        Message<SyndEntry> message;
+        while(true) {
+            message = (Message<SyndEntry>) googleNewChannel.receive(1000);
+            if (message == null) break;
 
-        if (news.size() > 10) {
-            news.poll();
+            news.add(message);
+            if (news.size() > 10) {
+                news.poll();
+            }
         }
-        logger.info("===== news check end current size : {}", news.size());
     }
 }

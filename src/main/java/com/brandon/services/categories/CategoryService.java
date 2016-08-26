@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Created by Naver on 2016-08-08.
+ * Created by brandonLee on 2016-08-08.
  */
 @Transactional
 public interface CategoryService {

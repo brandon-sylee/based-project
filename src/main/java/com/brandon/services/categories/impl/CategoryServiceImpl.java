@@ -5,8 +5,10 @@ import com.brandon.repositories.categories.CategoryRepository;
 import com.brandon.services.categories.CategoryService;
 import com.brandon.services.categories.converts.CategoryConverts;
 import com.brandon.services.categories.models.CategoryModel;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,11 +18,10 @@ import java.util.stream.Collectors;
  * Created by brandonLee on 2016-08-08.
  */
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
-    @Autowired
-    CategoryRepository repository;
-    @Autowired
-    CategoryConverts converts;
+    private final CategoryRepository repository;
+    private final CategoryConverts converts;
 
     @Override
     public List<CategoryModel> getRootCategory() {
@@ -46,6 +47,8 @@ public class CategoryServiceImpl implements CategoryService {
         return r;
     }
 
+    @PreAuthorize("hasRole('MASTER')")
+    @CacheEvict("categories")
     @Override
     public CategoryModel create(CategoryModel categoryModel) {
         CategoryEntity entity = repository.save(converts.convertModelToEntity(categoryModel));
@@ -53,6 +56,9 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryModel;
     }
 
+    @PreAuthorize("hasRole('MASTER')")
+    @CacheEvict("categories")
+    @Override
     public CategoryModel update(CategoryModel categoryModel) {
         CategoryEntity entity = repository.findOne(categoryModel.getSeq());
         entity.setName(categoryModel.getName());

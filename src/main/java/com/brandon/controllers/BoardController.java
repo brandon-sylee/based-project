@@ -4,6 +4,7 @@ import com.brandon.services.boards.BoardService;
 import com.brandon.services.boards.models.NormalBoardModel;
 import com.brandon.utils.BUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -24,13 +25,16 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 @Controller
 @RequestMapping(value = "board")
+@RequiredArgsConstructor
 public class BoardController {
     final Logger logger = getLogger(getClass());
-    @Autowired
-    BoardService<NormalBoardModel> service;
+    private final BoardService<NormalBoardModel> service;
+    private final BUtil bUtil;
 
-    @Autowired
-    BUtil bUtil;
+    @ModelAttribute("currentPageMenuId")
+    long currentPageMenuId() {
+        return 1L;
+    }
 
     @GetMapping
     public String list(Model model, @PageableDefault(sort = {"mid"}, direction = Sort.Direction.DESC, size = 5) Pageable pageable, @RequestParam(value = "q", required = false) String query) throws JsonProcessingException {
