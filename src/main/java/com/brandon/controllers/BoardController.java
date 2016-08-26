@@ -63,7 +63,7 @@ public class BoardController {
         if (bindingResult.hasErrors())
             return "board/write";
         service.write(normalBoardModel);
-        return "redirect:list";
+        return "redirect:/board";
     }
 
 }
