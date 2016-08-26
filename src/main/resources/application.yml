@@ -1,5 +1,8 @@
 spring.profiles.active: development
-
+spring:
+  mvc:
+    favicon:
+      enabled: true
 ---
 
 spring:

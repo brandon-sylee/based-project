@@ -6,7 +6,7 @@
 <div th:fragment="menu">
     <div class="navbar-wrapper">
         <div class="container">
-            <nav class="navbar navbar-inverse navbar-fixed-top">
+            <nav class="navbar navbar-default navbar-fixed-top">
                 <div class="container">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -15,21 +15,21 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" th:href="@{/}">Project name</a>
+                        <a class="navbar-brand" th:href="@{/}">brandon Lee's blog</a>
                     </div>
                     <div id="navbar" class="navbar-collapse collapse">
                         <ul class="nav navbar-nav" th:each="menu : ${menus}">
                             <li th:class="${currentPageMenuId==menu.seq}? 'active'" th:if="${#lists.isEmpty(menu.children)}"><a th:href="@{${menu.link}}" th:text="${menu.name}" th:data-menuid="${menu.seq}">menu</a></li>
                             <li th:class="${currentPageMenuId==menu.seq}? 'active'" class="dropdown" th:if="${!#lists.isEmpty(menu.children)}">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="${menu.name}">Dropdown <span class="caret"></span></a>
-                                <ul class="dropdown-menu" th:each="submenu : ${menu.children}">
+                                <a href="javascript:void(0);" id="menuDropdown" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="${menu.name}">Dropdown <span class="caret"></span></a>
+                                <ul class="dropdown-menu" aria-labelledby="menuDropdown" th:each="submenu : ${menu.children}">
                                     <li><a th:href="@{${submenu.link}}" th:text="${submenu.name}" th:data-menuid="${submenu.seq}">menu</a></li>
                                 </ul>
                             </li>
                         </ul>
                         <form class="navbar-form navbar-right" sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
-                            <span sec:authentication="name">Bob</span>
-                            <button type="submit" class="btn btn-success">Sign out</button>
+                            <span class="form-group text-primary" sec:authentication="name">user name</span>
+                            <button type="submit" class="form-group btn btn-default">Sign out</button>
                         </form>
                         <form class="navbar-form navbar-right" sec:authorize="isAnonymous()" th:action="@{/login}" method="post">
                             <div class="form-group">

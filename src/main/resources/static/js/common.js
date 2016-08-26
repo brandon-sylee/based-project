@@ -7,7 +7,7 @@
  * @param c 소수점 구분자
  * @returns {string}
  */
-Number.prototype.format = function(n, x, s, c) {
+Number.prototype.format = function (n, x, s, c) {
     var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
         num = this.toFixed(Math.max(0, ~~n));
 
@@ -15,17 +15,17 @@ Number.prototype.format = function(n, x, s, c) {
 };
 
 var front = {
-    modules : {},
+    modules: {},
     util: {}
 };
 
 front.modules = (function () {
     var $$modules = {}
     var _random = function () {
-        return ((1+Math.random()) * 0x10000|0).toString(16).substring(1);
+        return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
     }
-    var _uuid = function() {
-        return [_random()+_random(), _random(), _random(), _random(), _random()+_random()+_random()].join("-");
+    var _uuid = function () {
+        return [_random() + _random(), _random(), _random(), _random(), _random() + _random() + _random()].join("-");
     }
     var _register = function (oInstance, params) {
         if (oInstance == null || oInstance == undefined) return;
@@ -44,16 +44,17 @@ front.modules = (function () {
 
     var logger = {
         oldConsoleLog: null,
-        enable: function() {
-            if ( this.oldConsoleLog == null) return;
+        enable: function () {
+            if (this.oldConsoleLog == null) return;
             window['console']['log'] = this.oldConsoleLog;
         },
-        disable: function() {
+        disable: function () {
             this.oldConsoleLog = console.log;
-            window['console']['log'] = function(){};
+            window['console']['log'] = function () {
+            };
         }
     }
-    window.addEventListener("load", function() {
+    window.addEventListener("load", function () {
         _broadcast("$$START_UP$$");
     })
     return {
@@ -69,7 +70,7 @@ front.modules = (function () {
     }
 })();
 
-front.util =(function(){
+front.util = (function () {
     var _stringByteLength = function (source) {
         return (function (s, b, i, c) {
             for (b = i = 0; c = s.charCodeAt(i++); b += c >> 11 ? 3 : c >> 7 ? 2 : 1);
@@ -113,7 +114,7 @@ front.util =(function(){
         var parts = value.split("; " + name + "=");
         if (parts.length == 2) return parts.pop().split(";").shift();
     }
-    var _centerPopup = function(w, h, optional) {
+    var _centerPopup = function (w, h, optional) {
         var windowWidth = w;
         var windowHeight = h;
         var windowLeft = 0;
@@ -125,19 +126,22 @@ front.util =(function(){
             windowLeft = (window.screen.availWidth - windowWidth) / 2;
             windowTop = (window.screen.availHeight - windowHeight) / 2;
         }
-        var addOption="";
-        if (typeof optional === "undefined") {} else { addOption = optional; }
+        var addOption = "";
+        if (typeof optional === "undefined") {
+        } else {
+            addOption = optional;
+        }
         return {
             position: {
-                windowWidth:windowWidth,
-                windowHeight:windowHeight,
-                windowLeft:windowLeft,
-                windowTop:windowTop
+                windowWidth: windowWidth,
+                windowHeight: windowHeight,
+                windowLeft: windowLeft,
+                windowTop: windowTop
             },
-            option: 'width=' + windowWidth + ',height=' + windowHeight + ',left=' + windowLeft + ',top=' + windowTop+addOption
+            option: 'width=' + windowWidth + ',height=' + windowHeight + ',left=' + windowLeft + ',top=' + windowTop + addOption
         }
     }
-    var _storage = function() {
+    var _storage = function () {
 
     }
     return {
@@ -155,35 +159,20 @@ front.util =(function(){
 /**
  * 로그를 on/off 하는 모듈
  */
-front.modules.register(function() {
+front.modules.register(function () {
     return {
-        "$$START_UP$$" : function() {
+        "$$START_UP$$": function () {
             if (/*[[${isRealMode}]]*/false) front.modules.disableLogger();
         }
     }
 });
-/**
- * 메뉴 클릭 시, active 설정
- */
-front.modules.register(function() {
+
+front.modules.register(function () {
     return {
-        "$$START_UP$$" : function() {
-            if ( jQuery ) {
-                $(".nav .navbar-nav a").on("click", function() {
-
-                });
-            }
-
-        }
-    }
-});
-
-front.modules.register(function() {
-    return {
-        "$$START_UP$$" : function() {
-            if ( jQuery ) {
+        "$$START_UP$$": function () {
+            if (jQuery) {
                 $("#search").click(function () {
-                    location.href="?q="+$("#q").val();
+                    location.href = "?q=" + $("#q").val();
                 });
             }
         }
@@ -193,17 +182,16 @@ front.modules.register(function() {
 /**
  * new feed를 관리하는 모듈
  */
-front.modules.register(function() {
-    var newsFunction = function() {
+front.modules.register(function () {
+    var newsFunction = function () {
         var area = $("._news");
-        $.getJSON("/api/news",null, function(response) {
-            if ( response && response.length > 0 ) {
+        if (area.is("*")) $.getJSON("/api/news", null, function (response) {
+            if (response && response.length > 0) {
                 area.html("");
-                $.each(response, function(idx, elements) {
+                $.each(response, function (idx, elements) {
                     var li = $(document.createElement("li"));
                     var a = $(document.createElement("a"));
                     a.attr("href", elements.payload.link).text(elements.payload.title);
-                    console.log(li[0]);
                     area.append(li.append(a)).end();
                 });
             }
@@ -211,8 +199,8 @@ front.modules.register(function() {
     }
 
     return {
-        "$$START_UP$$" : function() {
-            if ( jQuery ) {
+        "$$START_UP$$": function () {
+            if (jQuery) {
                 newsFunction();
                 setInterval(newsFunction, 30 * 1000);
             }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org" layout:decorator="/templates/base">
 <body>
+<header layout:fragment="header" th:include="/templates/header :: header"></header>
 <section layout:fragment="content">
     <div class="panel panel-info">
         <div class="panel-heading">
