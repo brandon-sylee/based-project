@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="sidebar">
+    <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs affix-top">
+        <ul class="nav bs-docs-sidenav">
+            <li class=""><a href="#download">Download</a></li>
+            <li><a href="#whats-included">What's included</a>
+                <ul class="nav">
+                    <li><a href="#whats-included-precompiled">Precompiled</a></li>
+                    <li><a href="#whats-included-source">Source code</a></li>
+                </ul>
+            </li>
+        </ul>
+        <a href="#top" class="back-to-top"> Back to top </a>
+    </nav>
+    <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs affix-top">
+        <ul class="nav bs-docs-sidenav _news"></ul>
+    </nav>
+</div>
+</body>
+</html>

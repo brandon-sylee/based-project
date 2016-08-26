@@ -7,14 +7,24 @@
     <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}">
     <link rel="stylesheet" type="text/css" media="screen" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/rs/common.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/docs.css}"/>
 </head>
 <body>
-<header layout:fragment="header"></header>
+<header id="top" layout:fragment="header"></header>
 <div th:include="/templates/menu :: menu"></div>
 
-<section id="content" layout:fragment="content">
-    <p>This is default main content with default layout</p>
-</section>
+<div class="container bs-docs-container">
+    <div class="row">
+        <div class="col-md-9">
+            <section id="content" layout:fragment="content">
+                <p>This is default main content with default layout</p>
+            </section>
+        </div>
+        <div class="col-md-3">
+            <nav th:include="/templates/sidebar :: sidebar"></nav>
+        </div>
+    </div>
+</div>
 
 <footer th:include="/templates/footer :: footer"></footer>
 <script type="text/javascript" th:src="@{/webjars/jquery/3.1.0/jquery.min.js}"></script>

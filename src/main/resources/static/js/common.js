@@ -190,6 +190,7 @@ front.modules.register(function () {
                 area.html("");
                 $.each(response, function (idx, elements) {
                     var li = $(document.createElement("li"));
+                    li.addClass("eclipse");
                     var a = $(document.createElement("a"));
                     a.attr("href", elements.payload.link).text(elements.payload.title);
                     area.append(li.append(a)).end();
