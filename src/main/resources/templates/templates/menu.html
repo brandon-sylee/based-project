@@ -19,8 +19,8 @@
                     </div>
                     <div id="navbar" class="navbar-collapse collapse">
                         <ul class="nav navbar-nav" th:each="menu : ${menus}">
-                            <li th:if="${#lists.isEmpty(menu.children)}"><a th:href="@{${menu.link}}" th:text="${menu.name}" th:data-menuid="${menu.seq}">menu</a></li>
-                            <li class="dropdown" th:if="${!#lists.isEmpty(menu.children)}">
+                            <li th:class="${currentPageMenuId==menu.seq}? 'active'" th:if="${#lists.isEmpty(menu.children)}"><a th:href="@{${menu.link}}" th:text="${menu.name}" th:data-menuid="${menu.seq}">menu</a></li>
+                            <li th:class="${currentPageMenuId==menu.seq}? 'active'" class="dropdown" th:if="${!#lists.isEmpty(menu.children)}">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="${menu.name}">Dropdown <span class="caret"></span></a>
                                 <ul class="dropdown-menu" th:each="submenu : ${menu.children}">
                                     <li><a th:href="@{${submenu.link}}" th:text="${submenu.name}" th:data-menuid="${submenu.seq}">menu</a></li>

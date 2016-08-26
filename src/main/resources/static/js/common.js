@@ -1,3 +1,19 @@
+/**
+ * currency formatted
+ *
+ * @param n 소수점 이하
+ * @param x 구분 자리수
+ * @param s 구분자
+ * @param c 소수점 구분자
+ * @returns {string}
+ */
+Number.prototype.format = function(n, x, s, c) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = this.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+};
+
 var front = {
     modules : {},
     util: {}
@@ -36,10 +52,10 @@ front.modules = (function () {
             this.oldConsoleLog = console.log;
             window['console']['log'] = function(){};
         }
-    };
+    }
     window.addEventListener("load", function() {
         _broadcast("$$START_UP$$");
-    });
+    })
     return {
         staticVersion: /*[[${staticVersion}]]*/ '1',
         register: _register,
@@ -59,7 +75,7 @@ front.util =(function(){
             for (b = i = 0; c = s.charCodeAt(i++); b += c >> 11 ? 3 : c >> 7 ? 2 : 1);
             return b;
         })(source);
-    };
+    }
     var _cloneObject = function (obj) {
         if (null == obj || "object" != typeof obj) return obj;
         var copy = obj.constructor();
@@ -67,7 +83,7 @@ front.util =(function(){
             if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
         }
         return copy;
-    };
+    }
     var _isSameArray = function (a, b) {
         var i = 0, j;
         if (typeof a == "object" && a) {
@@ -85,18 +101,18 @@ front.util =(function(){
             }
         }
         return a === b;
-    };
+    }
     var _regexCheck = function (regex, val) {
         return regex.test(val);
     }
     var _runCallback = function (callback) {
         if (typeof callback === 'function') callback();
-    };
+    }
     var _getCookie = function (name) {
         var value = "; " + document.cookie;
         var parts = value.split("; " + name + "=");
         if (parts.length == 2) return parts.pop().split(";").shift();
-    };
+    }
     var _centerPopup = function(w, h, optional) {
         var windowWidth = w;
         var windowHeight = h;
@@ -119,8 +135,11 @@ front.util =(function(){
                 windowTop:windowTop
             },
             option: 'width=' + windowWidth + ',height=' + windowHeight + ',left=' + windowLeft + ',top=' + windowTop+addOption
-        };
-    };
+        }
+    }
+    var _storage = function() {
+
+    }
     return {
         byteLength: _stringByteLength,
         cloneObject: _cloneObject,
@@ -128,8 +147,9 @@ front.util =(function(){
         regex: _regexCheck,
         callback: _runCallback,
         getCookie: _getCookie,
-        popup: _centerPopup
-    };
+        popup: _centerPopup,
+        storage: _storage
+    }
 })();
 
 /**
@@ -159,7 +179,6 @@ front.modules.register(function() {
 });
 
 front.modules.register(function() {
-    var header = $(".navbar-wrapper .container");
     return {
         "$$START_UP$$" : function() {
             if ( jQuery ) {
