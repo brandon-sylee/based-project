@@ -160,15 +160,24 @@ front.modules.register(function() {
  * new feed를 관리하는 모듈
  */
 front.modules.register(function() {
+    var newsFunction = function() {
+        var area = $("._news");
+        $.getJSON("/api/news",null, function(response) {
+            var news = area.find("li");
+            var html = "";
+            $.each(response, function(idx, elements) {
+                news.push($("<li><a href='"+elements.payload.link+"'>"+elements.payload.title+"</a></li>"));
+            });
+            console.log(news);
+            area.append(news.slice(0, 10).join(""));
+        })
+    }
+
     return {
         "$$START_UP$$" : function() {
             if ( jQuery ) {
-                var area = $("._news");
-                setInterval(function() {
-                    $.getJSON("/api/news",null, function(response) {
-                        area.append("<li><a href='"+response.payload.link+"'>"+response.payload.title+"</a></li>");
-                    })
-                }, 1000);
+                newsFunction();
+                setInterval(newsFunction, 5000);
             }
         }
     }
