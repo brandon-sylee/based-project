@@ -9,8 +9,9 @@
     <int-feed:inbound-channel-adapter id="feedAdapter"
                                       channel="googleNewChannel"
                                       auto-startup="true"
+
                                       url="https://news.google.co.kr/news?cf=all&amp;hl=ko&amp;pz=1&amp;ned=kr&amp;output=rss">
-        <int:poller fixed-rate="10000" max-messages-per-poll="100" />
+        <int:poller fixed-rate="5000" max-messages-per-poll="100" />
     </int-feed:inbound-channel-adapter>
 
     <int:channel id="googleNewChannel">

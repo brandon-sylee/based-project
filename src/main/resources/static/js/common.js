@@ -163,13 +163,16 @@ front.modules.register(function() {
     var newsFunction = function() {
         var area = $("._news");
         $.getJSON("/api/news",null, function(response) {
-            var news = area.find("li");
-            var html = "";
-            $.each(response, function(idx, elements) {
-                news.push($("<li><a href='"+elements.payload.link+"'>"+elements.payload.title+"</a></li>"));
-            });
-            console.log(news);
-            area.append(news.slice(0, 10).join(""));
+            if ( response && response.length > 0 ) {
+                area.html("");
+                $.each(response, function(idx, elements) {
+                    var li = $(document.createElement("li"));
+                    var a = $(document.createElement("a"));
+                    a.attr("href", elements.payload.link).text(elements.payload.title);
+                    console.log(li[0]);
+                    area.append(li.append(a)).end();
+                });
+            }
         })
     }
 

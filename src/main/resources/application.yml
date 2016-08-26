@@ -1,8 +1,5 @@
 spring.profiles.active: development
-spring:
-  mvc:
-    async:
-      request-timeout:
+
 ---
 
 spring:

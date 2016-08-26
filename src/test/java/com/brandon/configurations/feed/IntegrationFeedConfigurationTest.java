@@ -12,6 +12,8 @@ import org.springframework.messaging.PollableChannel;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.util.List;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -38,5 +40,12 @@ public class IntegrationFeedConfigurationTest {
                 break;
             }
         }
+    }
+
+    @Test
+    public void feeds() throws Exception {
+        final Logger logger = getLogger(getClass());
+        Message<List<SyndEntry>> message = (Message<List<SyndEntry>>) googleNewChannel.receive(1000);
+        logger.debug("{}", message);
     }
 }
