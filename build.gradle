@@ -57,6 +57,8 @@ dependencies {
     compile('org.springframework.session:spring-session')
     /*compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive')*/
     compile('org.springframework.integration:spring-integration-feed:+')
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
+
 
     compile("org.springframework.boot:spring-boot-starter-security")
 

@@ -190,9 +190,8 @@ front.modules.register(function () {
                 area.html("");
                 $.each(response, function (idx, elements) {
                     var li = $(document.createElement("li"));
-                    li.addClass("eclipse");
                     var a = $(document.createElement("a"));
-                    a.attr("href", elements.payload.link).text(elements.payload.title);
+                    a.attr("href", elements.link).text(elements.title);
                     area.append(li.append(a)).end();
                 });
             }
@@ -203,7 +202,7 @@ front.modules.register(function () {
         "$$START_UP$$": function () {
             if (jQuery) {
                 newsFunction();
-                setInterval(newsFunction, 30 * 1000);
+                //setInterval(newsFunction, 30 * 1000);
             }
         }
     }

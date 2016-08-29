@@ -1,11 +1,11 @@
 package com.brandon.rest;
 
+import com.brandon.configurations.feed.IntegrationFeedConfiguration;
+import com.brandon.rest.beans.News;
 import com.brandon.rest.exceptions.NewFeedException;
-import com.brandon.services.feeds.GoogleNewService;
 import com.rometools.rome.feed.synd.SyndEntry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.Message;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 @RequestMapping("api")
 public class NewsRestController {
-    private final GoogleNewService googleNewService;
+    private final IntegrationFeedConfiguration.NewsFeed newsFeed;
 
     /**
      * spring thread 내에서 관리되는 async task
@@ -29,9 +29,9 @@ public class NewsRestController {
      * @throws NewFeedException
      */
     @GetMapping("news")
-    public Callable<List<Message<SyndEntry>>> news() throws NewFeedException {
+    public Callable<List<News>> news() throws NewFeedException {
         try {
-            return googleNewService::recentlyTop10;
+            return newsFeed::recentlyTop10;
         } catch (Exception e) {
             throw new NewFeedException(e);
         }
@@ -44,11 +44,11 @@ public class NewsRestController {
      * @throws NewFeedException
      */
     @GetMapping("gnews")
-    public DeferredResult<List<Message<SyndEntry>>> gnews() throws NewFeedException {
+    public DeferredResult<List<News>> gnews() throws NewFeedException {
         try {
-            DeferredResult<List<Message<SyndEntry>>> deferredResult = new DeferredResult<>();
+            DeferredResult<List<News>> deferredResult = new DeferredResult<>();
             CompletableFuture
-                    .supplyAsync(googleNewService::recentlyTop10)
+                    .supplyAsync(newsFeed::recentlyTop10)
                     .whenCompleteAsync((result, throwable) -> deferredResult.setResult(result));
             return deferredResult;
         } catch (Exception e) {
