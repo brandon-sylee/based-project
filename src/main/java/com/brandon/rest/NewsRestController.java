@@ -19,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api")
+@CrossOrigin
 public class NewsRestController {
     private final IntegrationFeedConfiguration.NewsFeed newsFeed;
 

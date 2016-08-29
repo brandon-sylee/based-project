@@ -207,3 +207,32 @@ front.modules.register(function () {
         }
     }
 });
+
+front.modules.register(function () {
+    var stompClient = null;
+    var time = $("#time");
+    var setConnected = function(connected) {
+        time.data("connected", connected);
+    }
+    var disconnect = function() {
+        if ( stompClient != null ) stompClient.disconnect();
+        setConnected(false);
+    }
+    var connect = function() {
+        var socket = new SockJS("/hello");
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(frame) {
+            setConnected(true);
+            console.log("Connected: ", frame);
+            stompClient.subscribe("/topic/greetings", function(greeting) {
+                console.log(greeting);
+                //showGreeting(JSON.parse(greeting.body).content);
+            });
+        });
+    }
+    return {
+        "$$START_UP$$": function () {
+            connect();
+        }
+    }
+});
