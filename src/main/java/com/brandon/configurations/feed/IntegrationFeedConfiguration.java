@@ -44,7 +44,7 @@ public class IntegrationFeedConfiguration {
     private final RssManagerProperties rssManagerProperties;
 
     @Bean
-    @InboundChannelAdapter(value = "feedChannel", poller = @Poller(maxMessagesPerPoll = "1", fixedRate = "3600000"))
+    @InboundChannelAdapter(value = "feedChannel", poller = @Poller(maxMessagesPerPoll = "1", fixedRate = "600000" ))
     public RssManager rssManager() {
         return new RssManager(rssManagerProperties);
     }
