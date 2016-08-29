@@ -5,13 +5,17 @@ import org.slf4j.Logger;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.Serializable;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
+ *
+ * @link "http://docs.spring.io/spring/docs/current/spring-framework-reference/html/websocket.html"
+ * @link "https://www.nginx.com/blog/websocket-nginx/"
+ * @link "http://jmesnil.net/stomp-websocket/doc/"
+ * example @link "https://spring.io/guides/gs/messaging-stomp-websocket/"
  * Created by brandon Lee on 2016-08-29.
  */
 @Configuration

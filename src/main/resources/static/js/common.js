@@ -219,20 +219,27 @@ front.modules.register(function () {
         setConnected(false);
     }
     var connect = function() {
-        var socket = new SockJS("/hello");
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function(frame) {
-            setConnected(true);
-            console.log("Connected: ", frame);
-            stompClient.subscribe("/topic/greetings", function(greeting) {
-                console.log(greeting);
-                //showGreeting(JSON.parse(greeting.body).content);
+        try {
+            var socket = new SockJS("/hello");
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function(frame) {
+                setConnected(true);
+                console.log("Connected: ", frame);
+                stompClient.subscribe("/topic/greetings", function(greeting) {
+                    console.log(greeting);
+                });
             });
-        });
+        } catch (e) {
+            console.log("연결중 오류 발생");
+            setConnected(false);
+        }
     }
     return {
         "$$START_UP$$": function () {
             connect();
+        },
+        "$$MESSAGE_SEND$$": function(msg) {
+
         }
     }
 });

@@ -21,17 +21,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/board/list/**").permitAll()
                 .antMatchers("/favicon.ico", "/rs/**", "/font/**", "/css/**", "/js/**", "/images/**", "/webjars/**", "/api/**").permitAll()
+                .antMatchers("/hello/**").permitAll()
                 .anyRequest().authenticated()
-                .and()
+            .and()
                 .formLogin()
                 .loginProcessingUrl("/login")
                 .loginPage("/")
                 .permitAll()
-                .and()
+            .and()
                 .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
-                .permitAll();
+                .permitAll()
+            .and()
+                .csrf()
+                .ignoringAntMatchers("/hello/**")
+            .and()
+                .headers().frameOptions().sameOrigin();
     }
 
     @Autowired

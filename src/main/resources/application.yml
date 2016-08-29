@@ -3,6 +3,7 @@ spring:
   mvc:
     favicon:
       enabled: true
+
 ---
 
 spring:
