@@ -1,5 +1,6 @@
 package com.brandon.configurations;
 
+import com.brandon.author.SimpleHierarchyRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -43,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .inMemoryAuthentication()
-                .withUser("dd.stay.hf@gmail.com").password("password").roles("MASTER");
+                .withUser("dd.stay.hf@gmail.com").password("password").authorities(SimpleHierarchyRole.valueOf("ROLE_MASTER").authorities());
     }
 
 }
