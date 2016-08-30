@@ -1,6 +1,7 @@
 package com.brandon.rest.webservice;
 
 import com.brandon.rest.beans.NoticeMessage;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -18,10 +19,11 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Created by brandon Lee on 2016-08-29.
  */
 @Controller
+@RequiredArgsConstructor
 public class NoticeController {
-    final Logger logger = getLogger(getClass());
+    private final Logger logger = getLogger(getClass());
 
-    @MessageMapping("hello")
+    @MessageMapping("notice")
     @SendTo("/topic/notice")
     public NoticeMessage hello(@Valid NoticeMessage noticeMessage) throws Exception {
         NoticeMessage echo = new NoticeMessage();

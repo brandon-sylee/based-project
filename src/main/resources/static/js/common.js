@@ -209,30 +209,37 @@ front.modules.register(function () {
 
 front.modules.register(function () {
     var stompClient = null;
-    var time = $("#time");
-    var setConnected = function(connected) {
-        time.data("connected", connected);
+    var setup = /*[[${webSocketProperties}]]*/ {};
+    var disconnect = function () {
+        if (stompClient != null) stompClient.disconnect();
     }
-    var disconnect = function() {
-        if ( stompClient != null ) stompClient.disconnect();
-        setConnected(false);
-    }
-    var connect = function() {
-        var socket = new SockJS("/hello");
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function(frame) {
-            setConnected(true);
-            stompClient.subscribe("/topic/notice", function(response) {
-                $.notify({icon: 'glyphicon glyphicon-alert', message : JSON.parse(response.body).message}, { type : 'success'});
+    var connect = function () {
+        if ( setup.endpoint ) {
+            var socket = new SockJS(setup.endpoint);
+            stompClient = Stomp.over(socket);
+            if (/*[[${isRealMode}]]*/ false) stompClient.debug = null;
+            stompClient.connect({}, function (frame) {
+                $.each(setup.topics, function (idx, topic) {
+                    stompClient.subscribe(setup.topic+topic, function (response) {
+                        $.notify({
+                            icon: 'glyphicon glyphicon-alert',
+                            message: JSON.parse(response.body).message
+                        }, {type: 'success'});
+                    });
+                });
             });
-        });
+        }
     }
-    $("#send").click(function() {
-        var transactionId = (Math.random()*1e32).toString(36);
+    // Only Test
+    $("#send").click(function () {
+        var transactionId = (Math.random() * 1e32).toString(36);
         stompClient.begin(transactionId);
-        stompClient.send("/app/hello", {transaction: transactionId}, JSON.stringify({'name': 'aaa', 'message' : 'bbb~'}));
+        stompClient.send(setup.destination+"/notice", {transaction: transactionId}, JSON.stringify({
+            'message': 'bbb~'
+        }));
         stompClient.commit(transactionId);
     });
+
     return {
         "$$START_UP$$": function () {
             disconnect();

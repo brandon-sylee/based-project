@@ -44,7 +44,7 @@ public class IntegrationFeedConfiguration {
     private final RssManagerProperties rssManagerProperties;
 
     @Bean
-    @InboundChannelAdapter(value = "feedChannel", poller = @Poller(maxMessagesPerPoll = "1", fixedRate = "600000" ))
+    @InboundChannelAdapter(value = "feedChannel", poller = @Poller(maxMessagesPerPoll = "1", fixedRate = "600000"))
     public RssManager rssManager() {
         return new RssManager(rssManagerProperties);
     }
@@ -71,10 +71,8 @@ public class IntegrationFeedConfiguration {
             } catch (Exception e) {
                 logger.error("setNewFeed Error", e);
             }
-
         }
     }
-
 
     public static class NewsFeed {
         final int LIMITED = 15;

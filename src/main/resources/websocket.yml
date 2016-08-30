@@ -1,0 +1,6 @@
+ws:
+  endpoint: /api/ws/notice
+  destination: /api/ws/app
+  topic: /topic
+  topics:
+    - /notice

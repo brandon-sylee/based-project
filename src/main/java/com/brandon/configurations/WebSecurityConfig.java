@@ -21,7 +21,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/board/list/**").permitAll()
                 .antMatchers("/favicon.ico", "/rs/**", "/font/**", "/css/**", "/js/**", "/images/**", "/webjars/**", "/api/**").permitAll()
-                .antMatchers("/hello/**","/app/**").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .formLogin()
@@ -35,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
             .and()
                 .csrf()
-                .ignoringAntMatchers("/hello/**")
+                .ignoringAntMatchers("/api/ws/**")
             .and()
                 .headers().frameOptions().sameOrigin();
     }
