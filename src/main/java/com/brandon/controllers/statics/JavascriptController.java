@@ -4,6 +4,7 @@ import com.brandon.configurations.websocket.WebSocketProperties;
 import com.brandon.services.annotation.CurrentUser;
 import com.brandon.utils.BUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -39,6 +40,7 @@ public class JavascriptController {
         model.addAttribute("isRealMode", bUtil.isRealMode());
         model.addAttribute("isAuthenticated", isLogin);
         model.addAttribute("webSocketProperties", webSocketProperties);
+        model.addAttribute("msid", Optional.ofNullable(authentication).map(x->authentication.hashCode()).orElse(1));
         return "common.js";
     }
 }

@@ -225,7 +225,7 @@ front.modules.register(function () {
                             icon: 'glyphicon glyphicon-alert',
                             message: JSON.parse(response.body).message
                         }, {type: 'success'});
-                    });
+                    }, {id: /*[[${msid}]]*/1});
                 });
             });
         }

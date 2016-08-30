@@ -28,6 +28,7 @@
                             </li>
                         </ul>
                         <form class="navbar-form navbar-right" sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+                            <button type="button" class="form-group btn btn-info" id="send">Notice</button>
                             <input type="hidden" th:name="${_csrf.headerName}" th:value="${_csrf.token}"/>
                             <span class="form-group text-primary" sec:authentication="name">user name</span>
                             <button type="submit" class="form-group btn btn-default">Sign out</button>

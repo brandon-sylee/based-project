@@ -3,6 +3,10 @@ spring:
   mvc:
     favicon:
       enabled: true
+  jmx:
+    default-domain: local.branon.com
+    enabled: true
+
 
 ---
 
@@ -37,6 +41,7 @@ logging:
     org.hibernate.SQL: INFO
     org.h2.server.web: INFO
     com.brandon: debug
+    org.apache.coyote: off
 ---
 
 spring:

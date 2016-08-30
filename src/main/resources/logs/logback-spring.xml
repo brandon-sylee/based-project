@@ -46,6 +46,7 @@
 
     <logger name="org.springframework.web" level="INFO"/>
     <logger name="org.thymeleaf" level="INFO"/>
+    <logger name="org.apache.coyote" level="OFF"/>
     <logger name="com.brandon" level="INFO"/>
 
     <root level="INFO">
