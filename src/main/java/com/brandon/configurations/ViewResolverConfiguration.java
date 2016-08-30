@@ -52,7 +52,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @ComponentScan(basePackageClasses = BasedProjectApplication.class)
 @RequiredArgsConstructor
 public class ViewResolverConfiguration extends WebMvcConfigurerAdapter implements ApplicationContextAware {
-    final Logger logger = getLogger(getClass());
+    private final Logger logger = getLogger(getClass());
     private final BUtil bUtil;
     private final CategoryService categoryService;
     private final MenuService menuService;
