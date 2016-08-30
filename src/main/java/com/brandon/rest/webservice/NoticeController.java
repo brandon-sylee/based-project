@@ -3,9 +3,13 @@ package com.brandon.rest.webservice;
 import com.brandon.rest.beans.NoticeMessage;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.validation.Valid;
 
@@ -29,5 +33,11 @@ public class NoticeController {
         NoticeMessage echo = new NoticeMessage();
         echo.setMessage(noticeMessage.getMessage());
         return echo;
+    }
+
+    @MessageExceptionHandler
+    @SendToUser(destinations="/queue/errors", broadcast=false)
+    public String handleException(Exception e) {
+        return e.getMessage();
     }
 }

@@ -220,6 +220,7 @@ front.modules.register(function () {
             if (/*[[${isRealMode}]]*/ false) stompClient.debug = null;
             stompClient.connect({}, function (frame) {
                 $.each(setup.topics, function (idx, topic) {
+                    console.log("등록 : ", setup.topic+topic);
                     stompClient.subscribe(setup.topic+topic, function (response) {
                         $.notify({
                             icon: 'glyphicon glyphicon-alert',
