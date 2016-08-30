@@ -202,7 +202,6 @@ front.modules.register(function () {
         "$$START_UP$$": function () {
             if (jQuery) {
                 newsFunction();
-                //setInterval(newsFunction, 30 * 1000);
             }
         }
     }
@@ -219,27 +218,27 @@ front.modules.register(function () {
         setConnected(false);
     }
     var connect = function() {
-        try {
-            var socket = new SockJS("/hello");
-            stompClient = Stomp.over(socket);
-            stompClient.connect({}, function(frame) {
-                setConnected(true);
-                console.log("Connected: ", frame);
-                stompClient.subscribe("/topic/greetings", function(greeting) {
-                    console.log(greeting);
-                });
+        var socket = new SockJS("/hello");
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(frame) {
+            setConnected(true);
+            stompClient.subscribe("/topic/notice", function(response) {
+                $.notify({icon: 'glyphicon glyphicon-alert', message : JSON.parse(response.body).message}, { type : 'success'});
             });
-        } catch (e) {
-            console.log("연결중 오류 발생");
-            setConnected(false);
-        }
+        });
     }
+    $("#send").click(function() {
+        var transactionId = (Math.random()*1e32).toString(36);
+        stompClient.begin(transactionId);
+        stompClient.send("/app/hello", {transaction: transactionId}, JSON.stringify({'name': 'aaa', 'message' : 'bbb~'}));
+        stompClient.commit(transactionId);
+    });
     return {
         "$$START_UP$$": function () {
-            connect();
-        },
-        "$$MESSAGE_SEND$$": function(msg) {
-
+            disconnect();
+            if (/*[[${isAuthenticated}]]*/ false) {
+                connect();
+            }
         }
     }
 });
