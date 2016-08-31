@@ -4,19 +4,16 @@ import org.slf4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.http.Http;
 import org.springframework.integration.handler.LoggingHandler;
-import org.springframework.integration.http.multipart.UploadedMultipartFile;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.messaging.MessageHandler;
-import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.HttpRequestHandler;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import java.net.URI;
-import java.util.LinkedList;
-import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -27,7 +24,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Configuration
 public class FileChannelConfiguration {
     private final Logger logger = getLogger(getClass());
-
 
     @Bean
     public MessageHandler fileLogger() {
@@ -48,6 +44,23 @@ public class FileChannelConfiguration {
     }
 
     @Bean
+    public HttpRequestHandler httpInboundAdapter() {
+        return Http
+                .inboundChannelAdapter("/api/upload")
+                .requestMapping(requestMappingSpec -> requestMappingSpec.methods(HttpMethod.GET, HttpMethod.POST))
+                .requestChannel("receiveChannel")
+                .multipartResolver(commonsMultipartResolver())
+                .get();
+    }
+
+    @Bean
+    public CommonsMultipartResolver commonsMultipartResolver() {
+        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+        // TODO 업로드 설정
+        return commonsMultipartResolver;
+    }
+
+    @Bean
     public IntegrationFlow httpFlow(MessageHandler requestGateway) {
         return IntegrationFlows.from("requestChannel")
                 .handle(requestGateway)
@@ -57,32 +70,9 @@ public class FileChannelConfiguration {
 
     @Bean
     public DefaultHttpHeaderMapper defaultHttpHeaderMapper() {
-        String[] headerNames = new String[] {"Content-Type"};
+        String[] headerNames = new String[]{"Content-Type"};
         DefaultHttpHeaderMapper defaultHttpHeaderMapper = new DefaultHttpHeaderMapper();
         defaultHttpHeaderMapper.setOutboundHeaderNames(headerNames);
         return defaultHttpHeaderMapper;
-    }
-
-    public interface MultipartRequestGateway {
-        HttpStatus postMultipartRequest(Map<String, Object> multipartRequest);
-    }
-
-    public class MultipartReceiver {
-        @SuppressWarnings("rawtypes")
-        public void receive(LinkedMultiValueMap<String, Object> multipartRequest){
-            logger.info("Successfully received multipart request: " + multipartRequest);
-            for (String elementName : multipartRequest.keySet()) {
-                if (elementName.equals("company")){
-                    LinkedList value =  (LinkedList)multipartRequest.get("company");
-                    String[] multiValues = (String[]) value.get(0);
-                    for (String companyName : multiValues) {
-                        logger.info(elementName + " - " + companyName);
-                    }
-                } else if (elementName.equals("company-logo")){
-                    logger.info(elementName + " - as UploadedMultipartFile: "
-                            + ((UploadedMultipartFile) multipartRequest.getFirst("company-logo")).getOriginalFilename());
-                }
-            }
-        }
     }
 }
