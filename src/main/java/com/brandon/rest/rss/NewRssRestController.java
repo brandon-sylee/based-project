@@ -1,22 +1,7 @@
 package com.brandon.rest.rss;
 
-import com.rometools.rome.feed.rss.Channel;
-import com.rometools.rome.feed.rss.Content;
-import com.rometools.rome.feed.rss.Description;
-import com.rometools.rome.feed.rss.Item;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.feed.AbstractRssFeedView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.brandon.rest.rss.NewRssRestController.DocumentService.NUMBER_OF_ITEMS;
 
 /**
  * Created by brandon Lee on 2016-08-30.
@@ -24,7 +9,7 @@ import static com.brandon.rest.rss.NewRssRestController.DocumentService.NUMBER_O
 @RestController
 @RequiredArgsConstructor
 public class NewRssRestController {
-    private final DocumentRssFeedView rssFeedView;
+    /*private final DocumentRssFeedView rssFeedView;
 
     @GetMapping("api/rss/news")
     public DocumentRssFeedView getNews() {
@@ -37,6 +22,19 @@ public class NewRssRestController {
         Collection<Document> getRecent(int count);
 
         Optional<Document> getOneMostRecent();
+    }
+
+    @Service
+    public class DocumentServiceImpl implements DocumentService {
+        @Override
+        public Collection<Document> getRecent(int count) {
+            return null;
+        }
+
+        @Override
+        public Optional<Document> getOneMostRecent() {
+            return null;
+        }
     }
 
     @Data
@@ -52,7 +50,7 @@ public class NewRssRestController {
     @RequiredArgsConstructor
     public class DocumentRssFeedView extends AbstractRssFeedView {
         private final DocumentService documentService;
-        private final String baseUrl;
+        private String baseUrl;
 
         @Override
         protected Channel newFeed() {
@@ -89,5 +87,5 @@ public class NewRssRestController {
             return description;
         }
 
-    }
+    }*/
 }

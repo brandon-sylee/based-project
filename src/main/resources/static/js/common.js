@@ -186,14 +186,33 @@ front.modules.register(function () {
     var newsFunction = function () {
         var area = $("._news");
         if (area.is("*")) $.getJSON("/api/news", null, function (response) {
-            if (response && response.length > 0) {
+            if (response && response.payload) {
                 area.html("");
-                $.each(response, function (idx, elements) {
-                    var li = $(document.createElement("li"));
-                    var a = $(document.createElement("a"));
-                    a.attr("href", elements.link).text(elements.title);
-                    area.append(li.append(a)).end();
+                $.each(response.payload, function(mainIdx, payload) {
+                    var ui_section = $(document.createElement("li"));
+                    ui_section.on("mouseenter", function(){
+                        ui_section.parent().find("li").removeClass("active");
+                        $(this).addClass("active");
+                    });
+
+                    var section_head = $(document.createElement("a"));
+                    section_head.text(payload.title);
+
+                    var ul = $(document.createElement("ul"));
+                    ul.addClass("nav");
+
+                    $.each(payload.entries, function(idx, elements) {
+                        var section_elements = $(document.createElement("li"));
+                        var element_link = $(document.createElement("a"));
+                        element_link.attr("href", elements.link);
+                        element_link.text(elements.title);
+                        element_link.appendTo(section_elements);
+                        ul.append(section_elements);
+                    });
+                    ui_section.append(section_head).append(ul).end();
+                    area.append(ui_section);
                 });
+                area.end();
             }
         })
     }

@@ -55,17 +55,13 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-websocket')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-tomcat')
-    /*compile('org.springframework.boot:spring-boot-starter-thymeleaf:+')*/
     compile('org.springframework.session:spring-session')
-    /*compile('org.springframework.boot.experimental:spring-boot-starter-web-reactive')*/
     compile('org.springframework.integration:spring-integration-feed:+')
     compile('org.springframework.integration:spring-integration-websocket')
+    compile('org.springframework.integration:spring-integration-file')
     compile('org.springframework.security:spring-security-messaging')
-
-    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
-
-
     compile("org.springframework.boot:spring-boot-starter-security")
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
 
     compile('org.thymeleaf:thymeleaf:3.0.1.RELEASE')
     compile('org.thymeleaf:thymeleaf-spring4:3.0.1.RELEASE')

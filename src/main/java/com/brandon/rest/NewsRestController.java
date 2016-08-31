@@ -1,15 +1,13 @@
 package com.brandon.rest;
 
-import com.brandon.configurations.feed.IntegrationFeedConfiguration;
-import com.brandon.rest.beans.News;
 import com.brandon.rest.exceptions.NewFeedException;
-import com.rometools.rome.feed.synd.SyndEntry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.PollableChannel;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 
@@ -21,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("api")
 @CrossOrigin
 public class NewsRestController {
-    private final IntegrationFeedConfiguration.NewsFeed newsFeed;
+    private final PollableChannel feedPublishingChannel;
 
     /**
      * spring thread 내에서 관리되는 async task
@@ -30,9 +28,9 @@ public class NewsRestController {
      * @throws NewFeedException
      */
     @GetMapping("news")
-    public Callable<List<News>> news() throws NewFeedException {
+    public Callable<Message<?>> news() throws NewFeedException {
         try {
-            return newsFeed::recentlyTop10;
+            return feedPublishingChannel::receive;
         } catch (Exception e) {
             throw new NewFeedException(e);
         }
@@ -45,11 +43,11 @@ public class NewsRestController {
      * @throws NewFeedException
      */
     @GetMapping("gnews")
-    public DeferredResult<List<News>> gnews() throws NewFeedException {
+    public DeferredResult<Message<?>> gnews() throws NewFeedException {
         try {
-            DeferredResult<List<News>> deferredResult = new DeferredResult<>();
+            DeferredResult<Message<?>> deferredResult = new DeferredResult<>();
             CompletableFuture
-                    .supplyAsync(newsFeed::recentlyTop10)
+                    .supplyAsync(feedPublishingChannel::receive)
                     .whenCompleteAsync((result, throwable) -> deferredResult.setResult(result));
             return deferredResult;
         } catch (Exception e) {
