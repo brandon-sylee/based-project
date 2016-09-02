@@ -62,6 +62,7 @@ dependencies {
     compile('org.springframework.integration:spring-integration-http')
     compile('org.springframework.security:spring-security-messaging')
     compile('org.springframework.boot:spring-boot-starter-security')
+    compile("org.springframework.boot:spring-boot-starter-hateoas")
     compile('org.apache.httpcomponents:httpclient:4.5.2')
 
     compile('commons-fileupload:commons-fileupload:+')

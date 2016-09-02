@@ -34,10 +34,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/")
                 .permitAll()
             .and()
-                .csrf()
-                .ignoringAntMatchers("/api/ws/**")
+                .headers().frameOptions().sameOrigin()
             .and()
-                .headers().frameOptions().sameOrigin();
+                .csrf()
+                //.disable();
+                .ignoringAntMatchers("/api/**");
+
     }
 
     @Autowired

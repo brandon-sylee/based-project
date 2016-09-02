@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfigurati
 @EnableAutoConfiguration(exclude = {ThymeleafAutoConfiguration.class})
 @EntityScan(basePackageClasses = EntityBased.class)
 public class BasedProjectApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(BasedProjectApplication.class, args);
     }

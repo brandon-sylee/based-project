@@ -53,6 +53,7 @@ public class RssFeedManager implements MessageSource<SyndEntry>, InitializingBea
                     CloseableHttpResponse response = client.execute(method);
                     InputStream stream = response.getEntity().getContent()
             ) {
+                logger.info("{} get data stream.... ", url);
                 return new SyndFeedInput().build(new XmlReader(stream));
             } catch (Exception e) {
                 logger.error("feed created fail{}", e);

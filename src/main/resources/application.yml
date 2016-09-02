@@ -6,7 +6,12 @@ spring:
   jmx:
     default-domain: local.branon.com
     enabled: true
-
+  http:
+    multipart:
+      enabled: true
+      location: d:\
+      max-file-size: 100Mb
+      max-request-size: 100Mb
 
 ---
 
