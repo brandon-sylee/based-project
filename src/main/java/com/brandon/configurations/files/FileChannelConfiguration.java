@@ -10,7 +10,9 @@ import org.springframework.integration.dsl.channel.MessageChannels;
 import org.springframework.integration.dsl.http.Http;
 import org.springframework.integration.http.inbound.HttpRequestHandlingMessagingGateway;
 import org.springframework.integration.http.multipart.UploadedMultipartFile;
+import org.springframework.integration.http.outbound.HttpRequestExecutingMessageHandler;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.LinkedMultiValueMap;
 
@@ -44,6 +46,11 @@ public class FileChannelConfiguration {
     }
 
 
+    /**
+     * URL을 매핑해줌.
+     *
+     * @return
+     */
     @Bean
     public HttpRequestHandlingMessagingGateway inboundChannelAdapter() {
         return Http
@@ -53,6 +60,10 @@ public class FileChannelConfiguration {
                 .get();
     }
 
+    /**
+     * 위에 설정된 url로 업로드된 파일을 필터링해서 서버에 업로드한다(ftp 등을 연동할 수 있다)
+     * @return
+     */
     @Bean
     public MessageChannel fileUploadChannel() {
         DirectChannel receiveChannel = MessageChannels.direct("fileUploadChannel").get();
@@ -65,6 +76,7 @@ public class FileChannelConfiguration {
                                 .flatMap(item -> ((LinkedList) item).parallelStream().filter(file -> file instanceof UploadedMultipartFile))
                                 .forEach(file -> {
                                     try {
+                                        // TODO 디비에 파일 이름을 저장.
                                         ((UploadedMultipartFile) file).transferTo(File.createTempFile(RandomStringUtils.randomAlphanumeric(64), null, ROOT));
                                     } catch (IOException e) {
                                         logger.error("File Upload Exception!!!", e);
