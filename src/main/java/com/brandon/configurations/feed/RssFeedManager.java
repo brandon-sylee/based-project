@@ -42,7 +42,8 @@ public class RssFeedManager implements MessageSource<SyndEntry>, InitializingBea
 
     private List<SyndFeed> getFeeds() {
         List<SyndFeed> feeds = new ArrayList<>();
-        properties.getUrls().parallelStream().forEach(url -> Optional.ofNullable(getFeed(url)).ifPresent(x -> feeds.add(x)));
+        if (properties.isEnable())
+            properties.getUrls().parallelStream().forEach(url -> Optional.ofNullable(getFeed(url)).ifPresent(x -> feeds.add(x)));
         return feeds;
     }
 

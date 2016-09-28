@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Created by brandon Lee(lz90011@linecorp.com) on 2016-07-04.
@@ -34,6 +35,10 @@ public class MBoardEntity implements Serializable {
     @JoinColumn(name = "master_board_id")
     private Collection<MContentEntity> contents;
 
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, targetEntity = MImageContentEntity.class)
+    @JoinColumn(name = "master_board_id")
+    private Collection<MImageContentEntity> images;
+
     private LocalDateTime created;
     private LocalDateTime updated;
 
@@ -43,8 +48,7 @@ public class MBoardEntity implements Serializable {
 
     public String getContent(String division) {
         StringBuffer content = new StringBuffer();
-        if ( contents != null )
-            getContents().stream().forEach(x -> content.append(x.getContents() + (StringUtils.hasLength(division) ? division : "")));
+        Optional.ofNullable(getContents()).ifPresent(c -> c.forEach(x -> content.append(x.getContents()).append(StringUtils.hasLength(division) ? division : "")));
         return content.toString();
     }
 

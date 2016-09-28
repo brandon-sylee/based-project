@@ -10,13 +10,11 @@ import com.brandon.services.boards.converter.BoardConverter;
 import com.brandon.services.boards.models.BoardAttributes;
 import com.brandon.services.boards.models.BoardPageableImpl;
 import com.brandon.utils.BUtil;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -28,53 +26,49 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Created by brandon Lee(lz90011@linecorp.com) on 2016-07-05.
  */
 @Transactional
+@RequiredArgsConstructor
 public abstract class AbstractBoardService<T extends BoardAttributes> implements BoardService<T> {
+    protected final BoardRepository repository;
+    protected final ContentRepository contentRepository;
+    protected final BoardConverter boardConverter;
+    protected final BUtil bUtil;
     final Logger logger = getLogger(getClass());
-
-    @Autowired
-    protected BoardRepository repository;
-
-    @Autowired
-    protected ContentRepository contentRepository;
-
-    @Autowired
-    protected BoardConverter<T> boardConverter;
-    @Autowired
-    BUtil bUtil;
 
     protected abstract Class<T> getTClass();
 
     @Transactional(readOnly = true)
     public Page<T> lists(Pageable pageable, String query) {
         if (StringUtils.hasLength(query)) {
-            query = query.trim().replace("\\s{2,}"," ") + "%";
-            List<MContentEntity> contentEntities = contentRepository.findByContentsContainingIgnoreCase(query);
-            long total = repository.countByContentsInOrSubjectLikeIgnoreCase(contentEntities, query);
+            query = query.trim().replace("\\s{2,}", " ") + "%";
+            List<MContentEntity> contentEntities = getContentRepository().findByContentsContainingIgnoreCase(query);
+            long total = getBoardRepository().countByContentsInOrSubjectLikeIgnoreCase(contentEntities, query);
             if (total > 0) {
-                List<T> result = repository.findByContentsInOrSubjectLikeIgnoreCase(contentEntities, query, pageable).parallelStream().map(mBoardEntity -> boardConverter.convertListModel(getTClass(), mBoardEntity)).collect(Collectors.toList());
+                List<T> result = getBoardRepository().findByContentsInOrSubjectLikeIgnoreCase(contentEntities, query, pageable).parallelStream()
+                        .map(mBoardEntity -> getBoardConverter().convertListModel(getTClass(), mBoardEntity)).collect(Collectors.toList());
                 return new BoardPageableImpl<>(result, pageable, total);
             }
         }
 
-        return repository.findAll(pageable).map(source -> boardConverter.convertListModel(getTClass(), source));
+        return getBoardRepository().findAll(pageable).map(source -> getBoardConverter().convertListModel(getTClass(), source));
     }
 
     @Transactional(readOnly = true)
     public T get(Long id) {
-        return boardConverter.convertReadModel(getTClass(), repository.getOne(id));
+        return getBoardConverter().convertReadModel(getTClass(), getBoardRepository().getOne(id));
     }
 
     public long write(T t) {
-        MBoardEntity mBoardEntity = repository.save(boardConverter.convertWriteModel(BoardTyped.NOTICE, t));
-        contentRepository.save(boardConverter.convertWriteModel(mBoardEntity, t));
+        MBoardEntity mBoardEntity = getBoardRepository().save(getBoardConverter().convertWriteModel(BoardTyped.NOTICE, t));
+        getContentRepository().save(getBoardConverter().convertWriteModel(mBoardEntity, t));
         return mBoardEntity.getMid();
     }
 
     public boolean update(Long id, T t) {
         try {
-            MBoardEntity mBoardEntity = repository.getOne(id);
+            MBoardEntity mBoardEntity = getBoardRepository().getOne(id);
             mBoardEntity.setSubject(t.getSubject());
-            mBoardEntity.setContents(mBoardEntity.getContents().stream().peek(mContentEntity -> mContentEntity.setContents(t.getContent())).collect(Collectors.toList()));
+            mBoardEntity.setContents(mBoardEntity.getContents().stream()
+                    .peek(mContentEntity -> mContentEntity.setContents(t.getContent())).collect(Collectors.toList()));
             return true;
         } catch (Exception e) {
             return false;
@@ -83,10 +77,22 @@ public abstract class AbstractBoardService<T extends BoardAttributes> implements
 
     public boolean remove(Long id) {
         try {
-            repository.delete(id);
+            getBoardRepository().delete(id);
             return true;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    protected BoardRepository getBoardRepository() {
+        return repository;
+    }
+
+    protected ContentRepository getContentRepository() {
+        return contentRepository;
+    }
+
+    protected BoardConverter<T> getBoardConverter() {
+        return boardConverter;
     }
 }

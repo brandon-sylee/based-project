@@ -1,6 +1,7 @@
 rss:
   feeds:
+    enable: false
     urls:
-      - http://www.kma.go.kr/weather/forecast/mid-term-rss3.jsp
+#      - http://www.kma.go.kr/weather/forecast/mid-term-rss3.jsp
       - https://news.google.co.kr/news?cf=all&hl=ko&pz=1&ned=kr&output=rss
 #      - http://rss.nytimes.com/services/xml/rss/nyt/Technology.xml

@@ -29,7 +29,7 @@ public class MContentEntity implements Serializable {
     }
 
     public MContentEntity(Long boardId, String contents) {
+        this(contents);
         this.boardId = boardId;
-        this.contents = contents;
     }
 }

@@ -2,10 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org" layout:decorator="/templates/base">
 <body>
 <section layout:fragment="content">
-    <form method="post" th:action="@{/board/write}" th:object="${normalBoardModel}">
+    <form th:if="${currentPageMenuId == 1}" method="post" th:action="@{/board/write}" th:object="${normalBoardModel}">
         <table>
-            <thead>
-            </thead>
             <tbody>
             <tr>
                 <th>제목</th>
@@ -18,6 +16,29 @@
             </tbody>
         </table>
         <button th:class="btn-primary">Form 쓰기</button>
+    </form>
+    <form th:if="${currentPageMenuId == 2}" method="post" th:action="@{/image/write}" th:object="${imageBoardModel}" enctype="multipart/form-data">
+        <table>
+            <tbody>
+            <tr>
+                <th>제목</th>
+                <td><input th:class="form-control" th:type="text" th:name="subject" th:field="*{subject}"/><p th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></p></td>
+            </tr>
+            <tr>
+                <th>내용</th>
+                <td><textarea th:class="form-control" th:name="content" th:field="*{content}"/><p th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p></td>
+            </tr>
+            <tr>
+                <th>파일</th>
+                <td>
+                    <input type="file" th:multiple="multiple" th:name="files" th:field="*{files}">
+                    <input type="file" th:multiple="multiple" th:name="files" th:field="*{files}">
+                    <p th:if="${#fields.hasErrors('files')}" th:errors="*{files}"></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <button type="submit" th:class="btn-primary">Form 쓰기</button>
     </form>
 </section>
 </body>

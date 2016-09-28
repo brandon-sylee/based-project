@@ -20,13 +20,13 @@ var front = {
 };
 
 front.modules = (function () {
-    var $$modules = {}
+    var $$modules = {};
     var _random = function () {
         return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
-    }
+    };
     var _uuid = function () {
         return [_random() + _random(), _random(), _random(), _random(), _random() + _random() + _random()].join("-");
-    }
+    };
     var _register = function (oInstance, params) {
         if (oInstance == null || oInstance == undefined) return;
         if (typeof oInstance === "function") oInstance = new oInstance(params || {});
@@ -37,10 +37,10 @@ front.modules = (function () {
         } catch (e) {
             console.log(instanceName + " be failed on modules.");
         }
-    }
+    };
     var _broadcast = function (broadCastName, params) {
         for (var module in $$modules)  if (broadCastName in $$modules[module]) $$modules[module][broadCastName](params || {});
-    }
+    };
 
     var logger = {
         oldConsoleLog: null,
@@ -53,10 +53,10 @@ front.modules = (function () {
             window['console']['log'] = function () {
             };
         }
-    }
+    };
     window.addEventListener("load", function () {
         _broadcast("$$START_UP$$");
-    })
+    });
     return {
         staticVersion: /*[[${staticVersion}]]*/ '1',
         register: _register,
@@ -76,7 +76,7 @@ front.util = (function () {
             for (b = i = 0; c = s.charCodeAt(i++); b += c >> 11 ? 3 : c >> 7 ? 2 : 1);
             return b;
         })(source);
-    }
+    };
     var _cloneObject = function (obj) {
         if (null == obj || "object" != typeof obj) return obj;
         var copy = obj.constructor();
@@ -84,7 +84,7 @@ front.util = (function () {
             if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
         }
         return copy;
-    }
+    };
     var _isSameArray = function (a, b) {
         var i = 0, j;
         if (typeof a == "object" && a) {
@@ -102,18 +102,18 @@ front.util = (function () {
             }
         }
         return a === b;
-    }
+    };
     var _regexCheck = function (regex, val) {
         return regex.test(val);
-    }
+    };
     var _runCallback = function (callback) {
         if (typeof callback === 'function') callback();
-    }
+    };
     var _getCookie = function (name) {
         var value = "; " + document.cookie;
         var parts = value.split("; " + name + "=");
         if (parts.length == 2) return parts.pop().split(";").shift();
-    }
+    };
     var _centerPopup = function (w, h, optional) {
         var windowWidth = w;
         var windowHeight = h;
@@ -140,10 +140,10 @@ front.util = (function () {
             },
             option: 'width=' + windowWidth + ',height=' + windowHeight + ',left=' + windowLeft + ',top=' + windowTop + addOption
         }
-    }
+    };
     var _storage = function () {
 
-    }
+    };
     return {
         byteLength: _stringByteLength,
         cloneObject: _cloneObject,
@@ -215,12 +215,12 @@ front.modules.register(function () {
                 area.end();
             }
         })
-    }
+    };
 
     return {
         "$$START_UP$$": function () {
             if (jQuery) {
-                newsFunction();
+                //newsFunction();
             }
         }
     }
@@ -231,7 +231,7 @@ front.modules.register(function () {
     var setup = /*[[${webSocketProperties}]]*/ {};
     var disconnect = function () {
         if (stompClient != null) stompClient.disconnect();
-    }
+    };
     var connect = function () {
         if ( setup.endpoint ) {
             var socket = new SockJS(setup.endpoint);
@@ -249,7 +249,7 @@ front.modules.register(function () {
                 });
             });
         }
-    }
+    };
     // Only Test
     $("#send").click(function () {
         var transactionId = (Math.random() * 1e32).toString(36);

@@ -14,5 +14,6 @@ import java.util.List;
 @Data
 public class RssFeedProperties implements Serializable {
     private static final long serialVersionUID = 3437528448357721503L;
+    private boolean enable;
     private List<URL> urls;
 }

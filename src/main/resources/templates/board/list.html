@@ -7,7 +7,8 @@
         <fieldset>
             <legend>버튼 및 검색 영역</legend>
             <ul>
-                <li><a th:href="@{/board/write}">글쓰기</a></li>
+                <li th:if="${currentPageMenuId == 1}"><a th:href="@{/board/write}">글쓰기</a></li>
+                <li th:if="${currentPageMenuId == 2}"><a th:href="@{/image/write}">글쓰기</a></li>
             </ul>
         </fieldset>
     </section>
@@ -21,19 +22,13 @@
                     <thead>
                     <tr>
                         <th>제목</th>
-                        <th>날짜 긴타입</th>
-                        <th>날짜 중간타입</th>
-                        <th>날짜 짧은타입</th>
-                        <th>표준시</th>
+                        <th>날짜</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="article : ${articles.content}">
                         <td th:text="${article.subject}">여기는 제목</td>
-                        <td th:text="${article.localizedDateTimeLong}">여기는 날짜</td>
                         <td th:text="${article.localizedDateTime}">여기는 날짜</td>
-                        <td th:text="${article.localizedDateTimeShort}">여기는 날짜</td>
-                        <td th:text="${#calendars.format(article.createdOnUTCBased, 'yyyy-MM-dd hh:mm:ss')}">여기는 UTC 날짜</td>
                     </tr>
                     </tbody>
                 </table>
