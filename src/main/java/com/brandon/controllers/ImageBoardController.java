@@ -1,0 +1,69 @@
+package com.brandon.controllers;
+
+import com.brandon.services.boards.BoardService;
+import com.brandon.services.boards.models.ImageBoardModel;
+import com.brandon.utils.BUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.validation.Valid;
+
+import static org.slf4j.LoggerFactory.getLogger;
+
+/**
+ * Created by brandon Lee on 2016-09-28.
+ */
+@Controller
+@RequestMapping(value = "image")
+@RequiredArgsConstructor
+public class ImageBoardController {
+    private final Logger logger = getLogger(getClass());
+    private final BoardService<ImageBoardModel> service;
+    private final BUtil bUtil;
+
+    @ModelAttribute("currentPageMenuId")
+    long currentPageMenuId() {
+        return 2L;
+    }
+
+    @GetMapping
+    public String list(Model model, @PageableDefault(sort = {"mid"}, direction = Sort.Direction.DESC, size = 5) Pageable pageable, @RequestParam(value = "q", required = false) String query) throws JsonProcessingException {
+        model.addAttribute("queryString", StringUtils.hasLength(query) ? query : "");
+        model.addAttribute("articles", service.lists(pageable, query));
+        return "board/list";
+    }
+
+    @GetMapping("{id:\\d+}")
+    public String read(Model model, @PathVariable Long id) {
+        model.addAttribute("article", service.get(id));
+        return "board/read";
+    }
+
+    @GetMapping("write")
+    public String write(ImageBoardModel writeModel) {
+        return "board/write";
+    }
+
+    @PostMapping("write")
+    public String save(@Valid ImageBoardModel writeModel, BindingResult bindingResult) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("### BindingResult : {} /// {}", bindingResult.hasErrors(), writeModel);
+        }
+
+        if (bindingResult.hasErrors())
+            return "board/write";
+
+        service.write(writeModel);
+        return "redirect:/image";
+    }
+}
