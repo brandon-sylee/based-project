@@ -8,13 +8,13 @@ import java.util.stream.Stream;
 
 public interface StorageService {
 
-    void init();
-
-    void store(MultipartFile file, String prefixPath);
+    void store(MultipartFile file, String path, String randomFileName);
 
     Stream<Path> loadAll();
 
     Path load(String filename);
+
+    Resource load(String path, String fileName);
 
     Resource loadAsResource(String filename);
 

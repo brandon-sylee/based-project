@@ -1,5 +1,7 @@
 package com.brandon.services.boards.models;
 
+import com.brandon.entities.boards.BoardTyped;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 
@@ -22,6 +24,8 @@ public interface BoardAttributes {
     LocalDateTime getCreated();
 
     void setCreated(LocalDateTime localDateTime);
+
+    BoardTyped getBoardTyped();
 
     default Collection<String> getImages() {
         return null;

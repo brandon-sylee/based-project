@@ -39,6 +39,9 @@ public class MBoardEntity implements Serializable {
     @JoinColumn(name = "master_board_id")
     private Collection<MImageContentEntity> images;
 
+    @Transient
+    private String representImage;
+
     private LocalDateTime created;
     private LocalDateTime updated;
 

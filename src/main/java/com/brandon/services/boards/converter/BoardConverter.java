@@ -25,10 +25,9 @@ public class BoardConverter<T extends BoardAttributes> {
         return new MContentEntity(mBoardEntity.getMid(), boardModel.getContent());
     }
 
-    public MBoardEntity convertWriteModel(BoardTyped boardTyped, T t) {
-        logger.debug("{}", t.getClass());
+    public MBoardEntity convertWriteModel(T t) {
         MBoardEntity entity = new MBoardEntity();
-        entity.setBoardTyped(boardTyped);
+        entity.setBoardTyped(t.getBoardTyped());
         entity.setSubject(t.getSubject());
         return entity;
     }
@@ -39,6 +38,12 @@ public class BoardConverter<T extends BoardAttributes> {
         t.setSubject(mBoardEntity.getSubject());
         t.setCreator(mBoardEntity.getCreator());
         t.setCreated(mBoardEntity.getUpdated());
+        return t;
+    }
+
+    public T convertReadModel(Class<T> tClass, MBoardEntity mBoardEntity) {
+        T t = convertListModel(tClass, mBoardEntity);
+        t.setContent(mBoardEntity.getContent());
         switch (mBoardEntity.getBoardTyped()) {
             case IMAGE:
                 t.setImages(Optional.ofNullable(mBoardEntity.getImages()).orElse(new ArrayList<>()).parallelStream()
@@ -47,12 +52,6 @@ public class BoardConverter<T extends BoardAttributes> {
             default:
                 break;
         }
-        return t;
-    }
-
-    public T convertReadModel(Class<T> tClass, MBoardEntity mBoardEntity) {
-        T t = convertListModel(tClass, mBoardEntity);
-        t.setContent(mBoardEntity.getContent());
         return t;
     }
 

@@ -4,6 +4,8 @@ import com.brandon.entities.storage.FileEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by brandon Lee on 2016-09-28.
  */

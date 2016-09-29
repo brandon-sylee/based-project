@@ -8,11 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -29,15 +31,32 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void store(MultipartFile file, String prefixPath) {
+    public void store(MultipartFile file, String path, String randomFileName) {
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
             }
-            logger.debug("{}", rootLocation);
-            Files.copy(file.getInputStream(), this.rootLocation.resolve(file.getOriginalFilename()));
+            Path resolvedPath = Paths.get(rootLocation.toString(), path);
+            if (!resolvedPath.toFile().exists())
+                Files.createDirectories(resolvedPath);
+            Files.copy(file.getInputStream(), resolvedPath.resolve(randomFileName));
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + file.getOriginalFilename(), e);
+        }
+    }
+
+    public Resource load(String path, String fileName) {
+        try {
+            Path file = Paths.get(rootLocation.toString(), path).resolve(fileName);
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new StorageFileNotFoundException("Could not read file: " + fileName);
+
+            }
+        } catch (MalformedURLException e) {
+            throw new StorageFileNotFoundException("Could not read file: " + fileName, e);
         }
     }
 
@@ -79,10 +98,11 @@ public class FileSystemStorageService implements StorageService {
         FileSystemUtils.deleteRecursively(rootLocation.toFile());
     }
 
-    @Override
+    @PostConstruct
     public void init() {
         try {
-            Files.createDirectory(rootLocation);
+            if (!rootLocation.toFile().exists())
+                Files.createDirectory(rootLocation);
         } catch (IOException e) {
             throw new StorageException("Could not initialize storage", e);
         }

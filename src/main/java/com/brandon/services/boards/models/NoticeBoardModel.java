@@ -1,5 +1,6 @@
 package com.brandon.services.boards.models;
 
+import com.brandon.entities.boards.BoardTyped;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,4 +21,9 @@ public class NoticeBoardModel implements Serializable, BoardAttributes {
     private String content;
     private String creator;
     private LocalDateTime created;
+
+    @Override
+    public BoardTyped getBoardTyped() {
+        return BoardTyped.NOTICE;
+    }
 }

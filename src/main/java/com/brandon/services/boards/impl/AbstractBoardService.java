@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,17 +40,23 @@ public abstract class AbstractBoardService<T extends BoardAttributes> implements
     @Transactional(readOnly = true)
     public Page<T> lists(Pageable pageable, String query) {
         if (StringUtils.hasLength(query)) {
-            query = query.trim().replace("\\s{2,}", " ") + "%";
-            List<MContentEntity> contentEntities = getContentRepository().findByContentsContainingIgnoreCase(query);
-            long total = getBoardRepository().countByContentsInOrSubjectLikeIgnoreCase(contentEntities, query);
-            if (total > 0) {
-                List<T> result = getBoardRepository().findByContentsInOrSubjectLikeIgnoreCase(contentEntities, query, pageable).parallelStream()
-                        .map(mBoardEntity -> getBoardConverter().convertListModel(getTClass(), mBoardEntity)).collect(Collectors.toList());
-                return new BoardPageableImpl<>(result, pageable, total);
-            }
+            return search(pageable, query);
         }
 
         return getBoardRepository().findAll(pageable).map(source -> getBoardConverter().convertListModel(getTClass(), source));
+    }
+
+    @Transactional(readOnly = true)
+    protected Page<T> search(Pageable pageable, String query) {
+        query = query.trim().replace("\\s{2,}", " ") + "%";
+        List<MContentEntity> contentEntities = getContentRepository().findByContentsContainingIgnoreCase(query);
+        long total = getBoardRepository().countByContentsInOrSubjectLikeIgnoreCase(contentEntities, query);
+        if (total > 0) {
+            List<T> result = getBoardRepository().findByContentsInOrSubjectLikeIgnoreCase(contentEntities, query, pageable).parallelStream()
+                    .map(mBoardEntity -> getBoardConverter().convertListModel(getTClass(), mBoardEntity)).collect(Collectors.toList());
+            return new BoardPageableImpl<>(result, pageable, total);
+        }
+        return new BoardPageableImpl<>(new ArrayList<T>(), pageable, 0);
     }
 
     @Transactional(readOnly = true)
@@ -58,7 +65,8 @@ public abstract class AbstractBoardService<T extends BoardAttributes> implements
     }
 
     public long write(T t) {
-        MBoardEntity mBoardEntity = getBoardRepository().save(getBoardConverter().convertWriteModel(BoardTyped.NOTICE, t));
+        logger.debug("{}", t.getClass());
+        MBoardEntity mBoardEntity = getBoardRepository().save(getBoardConverter().convertWriteModel(t));
         getContentRepository().save(getBoardConverter().convertWriteModel(mBoardEntity, t));
         return mBoardEntity.getMid();
     }

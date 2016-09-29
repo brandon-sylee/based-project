@@ -1,5 +1,6 @@
 package com.brandon.services.boards.models;
 
+import com.brandon.entities.boards.BoardTyped;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -37,6 +38,11 @@ public class ImageBoardModel implements Serializable, BoardAttributes {
     private String creator;
     private Collection<String> images;
     private Collection<MultipartFile> files;
+
+    @Override
+    public BoardTyped getBoardTyped() {
+        return BoardTyped.IMAGE;
+    }
 
     public Collection<String> getImages() {
         return Optional.ofNullable(images)

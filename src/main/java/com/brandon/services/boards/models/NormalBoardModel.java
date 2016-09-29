@@ -1,5 +1,6 @@
 package com.brandon.services.boards.models;
 
+import com.brandon.entities.boards.BoardTyped;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,6 +34,11 @@ public class NormalBoardModel implements Serializable, BoardAttributes {
 
     @JsonIgnore
     private LocalDateTime created;
+
+    @Override
+    public BoardTyped getBoardTyped() {
+        return BoardTyped.NORMAL;
+    }
 
     @JsonProperty("created")
     public long getCreatedOnUTCBased() {
